@@ -3,21 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#fff5d9">
-  <meta name="description" content="Join Leo on a gentle storybook adventure to meet four NASA space explorers.">
+  <meta name="theme-color" content="#fff4df">
+  <meta name="description" content="Read along with Leo on a magical storybook adventure to meet four NASA explorers.">
   <title>Leo and the Lost Space Machines</title>
   <style>
     :root {
       color-scheme: light;
-      --ink: #263353;
-      --muted: #566482;
-      --paper: #fff8e6;
-      --blue: #4667d5;
-      --blue-dark: #304dad;
-      --pink: #f27b91;
-      --yellow: #ffd166;
-      --mint: #73cfb2;
-      --lilac: #ac9af0;
+      --paper: #fff4df;
+      --ink: #41313a;
+      --soft-ink: #705861;
+      --coral: #ed8278;
+      --coral-dark: #9c4549;
+      --gold: #ffd16f;
+      --teal: #75c9b0;
+      --night: #19264b;
       --serif: Georgia, "Times New Roman", serif;
       --sans: "Trebuchet MS", Arial, sans-serif;
     }
@@ -29,475 +28,616 @@
       min-height: 100svh;
       margin: 0;
       overflow-x: hidden;
-      background:
-        radial-gradient(ellipse at 10% 12%, rgba(255,255,255,.82), transparent 34%),
-        radial-gradient(ellipse at 88% 78%, rgba(255,225,172,.38), transparent 30%),
-        #fff5dc;
       color: var(--ink);
-      font: 18px/1.55 var(--sans);
+      background:
+        radial-gradient(ellipse at 12% 9%, rgba(255,255,255,.92), transparent 35%),
+        radial-gradient(ellipse at 86% 93%, rgba(247,195,152,.35), transparent 35%),
+        var(--paper);
+      font: 18px/1.5 var(--sans);
     }
     button, a { font: inherit; -webkit-tap-highlight-color: transparent; }
-    button:focus-visible, a:focus-visible { outline: 4px solid #243b94; outline-offset: 4px; }
-    .book {
-      position: relative;
-      display: flex;
-      min-height: 100svh;
-      flex-direction: column;
-      isolation: isolate;
-    }
-    .sky-dots {
+    button:focus-visible, a:focus-visible { outline: 4px solid #293d83; outline-offset: 4px; }
+    [hidden] { display: none !important; }
+
+    .book { min-height: 100svh; display: flex; flex-direction: column; isolation: isolate; }
+    .page-stars {
       position: fixed;
       z-index: -1;
       inset: 0;
       pointer-events: none;
+      opacity: .63;
       background-image:
-        radial-gradient(circle, rgba(91,119,189,.35) 1.3px, transparent 1.8px),
-        radial-gradient(circle, rgba(255,172,111,.5) 1.6px, transparent 2px),
-        radial-gradient(circle, rgba(151,133,217,.35) 1px, transparent 1.5px);
-      background-position: 25px 32px, 123px 104px, 230px 40px;
-      background-size: 198px 181px, 247px 226px, 163px 193px;
+        radial-gradient(circle, #dcaa71 1.3px, transparent 1.9px),
+        radial-gradient(circle, #a3a2c6 1.1px, transparent 1.7px),
+        radial-gradient(circle, #edb67c 1.6px, transparent 2px);
+      background-position: 21px 31px, 118px 87px, 43px 139px;
+      background-size: 189px 173px, 239px 213px, 307px 281px;
       animation: twinkle 5s ease-in-out infinite alternate;
     }
     .topbar {
-      z-index: 2;
+      z-index: 4;
       display: flex;
-      min-height: 76px;
+      min-height: 62px;
+      width: min(1150px, calc(100% - 38px));
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
-      width: min(1050px, calc(100% - 44px));
-      margin: 0 auto;
-      border-bottom: 1px solid rgba(47,64,101,.12);
+      gap: 12px;
+      margin-inline: auto;
     }
-    .wordmark {
+    .book-title {
       display: inline-flex;
       align-items: center;
-      gap: 9px;
+      gap: 8px;
       color: var(--ink);
-      font-size: .79rem;
+      font-size: .9rem;
       font-weight: 800;
-      letter-spacing: .025em;
       text-decoration: none;
     }
-    .wordmark-star { color: #ee9070; font-size: 1.45rem; line-height: 1; }
-    .top-actions { display: flex; align-items: center; gap: 14px; }
-    .chapter-count { color: var(--muted); font-size: .82rem; font-weight: 700; white-space: nowrap; }
-    .chapter-count strong { color: var(--blue-dark); }
-    .sources-link {
-      min-height: 40px;
-      padding: 6px 14px;
-      border: 2px solid rgba(57,78,139,.2);
+    .book-title span { color: #da856b; font-size: 1.35rem; }
+    .top-tools { display: flex; align-items: center; gap: 14px; }
+    .scene-count { color: #755e60; font-size: .75rem; white-space: nowrap; }
+    .scene-count strong { color: var(--coral-dark); }
+    .small-button {
+      min-height: 37px;
+      padding: 5px 13px;
+      border: 1px solid rgba(95,65,68,.2);
       border-radius: 999px;
-      background: rgba(255,255,255,.58);
-      color: var(--blue-dark);
+      background: rgba(255,255,255,.72);
+      color: #68484b;
       cursor: pointer;
-      font-size: .8rem;
+      font-size: .74rem;
       font-weight: 800;
-      transition: background .2s ease, transform .2s ease;
+      transition: transform .18s ease, background .18s ease;
     }
-    .sources-link:hover { transform: translateY(-2px); background: white; }
+    .small-button:hover { transform: translateY(-2px); background: white; }
+
     .story-page {
       display: flex;
-      width: 100%;
       flex: 1;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: clamp(24px, 4vh, 42px) 22px 26px;
-      animation: page-in .45s cubic-bezier(.2,.72,.28,1) both;
+      padding: 8px 20px 19px;
+      animation: page-in .45s ease both;
     }
     .story-page[hidden] { display: none; }
-    .page-inner {
-      display: grid;
-      width: min(1050px, 100%);
-      grid-template-columns: minmax(0, 1.04fr) minmax(310px, .96fr);
-      align-items: center;
-      gap: clamp(27px, 6vw, 78px);
-      margin: auto;
-    }
-    .story-copy { max-width: 505px; }
-    .page-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 12px;
-      border: 1px solid rgba(62,85,157,.14);
-      border-radius: 999px;
-      background: rgba(255,255,255,.6);
-      color: #50628e;
-      font-size: .72rem;
-      font-weight: 800;
-      letter-spacing: .055em;
-      text-transform: uppercase;
-    }
-    .page-label::before { width: 8px; height: 8px; border-radius: 50%; background: var(--pink); content: ""; }
-    h1 {
-      margin: 18px 0 13px;
-      font: 700 clamp(2.6rem, 5.4vw, 4.65rem)/1.02 var(--serif);
-      letter-spacing: -.055em;
-      text-wrap: balance;
-    }
-    .chapter-story { margin: 0; color: #414f70; font-size: clamp(1.05rem, 1.5vw, 1.22rem); line-height: 1.62; }
-    .machine-notes {
-      display: grid;
-      gap: 8px;
-      margin-top: 21px;
-    }
-    .note {
-      padding: 9px 12px;
-      border-left: 4px solid var(--mint);
-      border-radius: 0 9px 9px 0;
-      background: rgba(255,255,255,.67);
-      color: #44516c;
-      font-size: .83rem;
-      line-height: 1.48;
-    }
-    .note strong { color: #303e61; }
-    .note-dialogue { border-color: var(--pink); background: #fff0ee; }
-    .note-dialogue strong { color: #aa435d; }
-    .note-fact { border-color: #efbd43; background: #fff6d8; }
-    .scene-wrap {
+    .page-turn { animation: page-turn .52s cubic-bezier(.2,.72,.24,1) both; }
+    .stage {
       position: relative;
-      display: grid;
-      min-height: clamp(280px, 42vw, 440px);
-      place-items: center;
+      width: min(1160px, 100%);
+      height: clamp(440px, 70svh, 680px);
+      min-height: 420px;
       overflow: hidden;
-      border: 3px solid rgba(255,255,255,.84);
-      border-radius: 43% 43% 36% 36% / 39% 39% 30% 30%;
-      background: linear-gradient(180deg, #a9ddf2 0%, #d2eafa 57%, #f8dca9 100%);
-      box-shadow: 0 17px 40px rgba(67,82,125,.13), inset 0 0 0 1px rgba(64,85,132,.12);
+      border: 5px solid rgba(255,255,255,.88);
+      border-radius: 40px;
+      background: linear-gradient(180deg, #a4d5e9 0%, #d2e8e4 63%, #f5d6a5 100%);
+      box-shadow: 0 22px 60px rgba(100,67,61,.17), inset 0 0 0 1px rgba(103,83,84,.1);
       isolation: isolate;
     }
-    .scene-wrap::before {
+    .stage::before {
       position: absolute;
-      z-index: -1;
-      top: 13%;
+      z-index: -2;
+      top: 11%;
       right: 12%;
-      width: 51px;
+      width: 63px;
       aspect-ratio: 1;
       border-radius: 50%;
-      background: #fff4bd;
-      box-shadow: 0 0 0 11px rgba(255,244,189,.2), 0 0 32px rgba(255,230,151,.75);
+      background: #fff1bb;
+      box-shadow: 0 0 0 12px rgba(255,241,187,.23), 0 0 38px rgba(255,225,155,.7);
       content: "";
+      animation: sun-glow 4s ease-in-out infinite alternate;
     }
-    .scene-wrap::after {
+    .stage::after {
       position: absolute;
       z-index: -1;
-      right: -8%;
-      bottom: 0;
-      left: -8%;
-      height: 34%;
+      right: -5%;
+      bottom: -7%;
+      left: -5%;
+      height: 33%;
       border-radius: 50% 50% 0 0;
-      background: linear-gradient(180deg, #c8d99a, #9ac486);
+      background: linear-gradient(180deg, #bbcf8f, #83ae79);
       content: "";
     }
-    .scene-wrap[data-scene="message"] { background: linear-gradient(180deg,#8fc8ec,#dbedfa 62%,#ffe4b2); }
-    .scene-wrap[data-scene="sojourner"], .scene-wrap[data-scene="opportunity"] { background: linear-gradient(180deg,#b2d8ed,#f1d4b0 69%,#d99571); }
-    .scene-wrap[data-scene="insight"] { background: linear-gradient(180deg,#b4dcf0,#e8d4c5 68%,#ca9377); }
-    .scene-wrap[data-scene="voyager"] { background: linear-gradient(180deg,#202c61,#4d5e9d 58%,#b48fbe); }
-    .scene-wrap[data-scene="ending"] { background: linear-gradient(180deg,#a1d9ee,#d7e8f4 58%,#f6d7a4); }
-    .scene-wrap[data-scene="voyager"]::after { background: linear-gradient(180deg,#505e91,#343e72); }
-    .scene-wrap[data-scene="ending"]::after { background: linear-gradient(180deg,#f3bd82,#dc8e83); }
-    .cloud {
-      position: absolute;
-      top: 19%;
-      left: 10%;
-      width: 70px;
-      height: 22px;
-      border-radius: 40px;
-      background: rgba(255,255,255,.78);
-      animation: float 6s ease-in-out infinite;
+    .stage[data-scene="bedroom"] {
+      background: linear-gradient(180deg, #17234a 0%, #33355e 58%, #ad7b77 100%);
     }
-    .cloud::before, .cloud::after {
-      position: absolute;
-      bottom: 7px;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: inherit;
-      content: "";
-    }
-    .cloud::before { left: 10px; }
-    .cloud::after { right: 7px; width: 25px; height: 25px; }
-    .cloud-two { top: 31%; left: auto; right: 8%; transform: scale(.64); animation-delay: -2s; }
-    .hill {
+    .stage[data-scene="bedroom"]::before { background: #fff0c1; box-shadow: 0 0 0 12px rgba(255,241,187,.1), 0 0 35px rgba(255,225,155,.4); }
+    .stage[data-scene="bedroom"]::after { height: 23%; border-radius: 0; background: linear-gradient(180deg,#bd8778,#986b72); }
+    .stage[data-scene="mars"] { background: linear-gradient(180deg,#a4d3e2 0%,#edc3a2 60%,#d87e5d 100%); }
+    .stage[data-scene="mars"]::after { height: 34%; background: linear-gradient(180deg,#e1a071,#bb684f); }
+    .stage[data-scene="evening"] { background: linear-gradient(180deg,#4b527a 0%,#c48783 62%,#dd9670 100%); }
+    .stage[data-scene="evening"]::before { top: 14%; right: 16%; width: 43px; background: #fff0d0; box-shadow: 0 0 28px rgba(255,230,182,.42); }
+    .stage[data-scene="evening"]::after { height: 37%; background: linear-gradient(180deg,#c9896d,#995d58); }
+    .stage[data-scene="space"] { background: radial-gradient(ellipse at 51% 47%,#394876 0%,#202c55 44%,#141c3d 100%); }
+    .stage[data-scene="space"]::before { top: 12%; right: 13%; width: 50px; background: #ffe8ac; box-shadow: 0 0 32px rgba(255,232,172,.52); }
+    .stage[data-scene="space"]::after { height: 16%; background: linear-gradient(180deg,rgba(122,112,156,.72),rgba(70,65,112,.9)); }
+    .stage[data-scene="home"] { background: linear-gradient(180deg,#17234a 0%,#59658c 54%,#edaa82 100%); }
+    .stage[data-scene="home"]::after { height: 24%; background: linear-gradient(180deg,#86a375,#628265); }
+
+    .scene-star {
       position: absolute;
       z-index: -1;
-      right: 28%;
-      bottom: 17%;
-      width: 67%;
-      height: 21%;
-      border-radius: 50%;
-      background: rgba(195,133,105,.65);
-      transform: rotate(-8deg);
-    }
-    .scene-caption {
-      position: absolute;
-      right: 13px;
-      bottom: 11px;
-      color: rgba(51,62,88,.78);
-      font-size: .64rem;
-      font-weight: 800;
-      letter-spacing: .035em;
-    }
-    [data-scene="voyager"] .scene-caption { color: #fff4d9; }
-    .leo {
-      position: absolute;
-      z-index: 1;
-      bottom: 20%;
-      left: 21%;
-      width: 82px;
-      height: 122px;
-      animation: float 4s ease-in-out infinite;
-    }
-    .leo-head {
-      position: absolute;
-      top: 0;
-      left: 21px;
-      width: 49px;
-      height: 50px;
-      border-radius: 48% 48% 44% 44%;
-      background: #f2b987;
-      box-shadow: inset -4px -3px rgba(181,104,75,.12);
-    }
-    .leo-hair {
-      position: absolute;
-      z-index: 1;
-      top: -4px;
-      left: 19px;
-      width: 49px;
-      height: 23px;
-      border-radius: 60% 48% 12% 18%;
-      background: #67434a;
-      transform: rotate(-4deg);
-    }
-    .leo-hair::before, .leo-hair::after {
-      position: absolute;
-      bottom: -7px;
-      width: 16px;
-      height: 20px;
-      border-radius: 2px 3px 12px 12px;
-      background: #67434a;
-      content: "";
-    }
-    .leo-hair::before { left: 2px; transform: rotate(12deg); }
-    .leo-hair::after { left: 17px; transform: rotate(-8deg); }
-    .leo-eye { position: absolute; z-index: 2; top: 23px; left: 35px; width: 5px; height: 6px; border-radius: 50%; background: #32334c; box-shadow: 20px 0 #32334c; }
-    .leo-smile { position: absolute; z-index: 2; top: 34px; left: 44px; width: 12px; height: 6px; border-bottom: 2px solid #a85854; border-radius: 50%; }
-    .leo-body { position: absolute; top: 44px; left: 16px; width: 61px; height: 58px; border: 3px solid rgba(255,255,255,.8); border-radius: 21px 21px 12px 12px; background: #6381e8; }
-    .leo-body::after { position: absolute; top: 8px; left: 10px; width: 11px; height: 9px; border-radius: 3px; background: #ffd66f; box-shadow: 20px 1px 0 -3px #ffd6b4; content: ""; }
-    .leo-arm { position: absolute; z-index: 2; top: 53px; width: 13px; height: 39px; border-radius: 8px; background: #f2b987; }
-    .leo-arm.left { left: 7px; transform: rotate(19deg); }
-    .leo-arm.right { right: 0; transform: rotate(-27deg); }
-    .leo-leg { position: absolute; top: 96px; left: 27px; width: 14px; height: 25px; border-radius: 0 0 6px 6px; background: #404b72; box-shadow: 25px 0 #404b72; }
-    .leo-shoe { position: absolute; top: 114px; left: 19px; width: 24px; height: 9px; border-radius: 8px 3px 5px 5px; background: #f27b91; box-shadow: 25px 0 #f27b91; }
-    .space-helmet {
-      position: absolute;
-      z-index: 3;
-      top: -9px;
-      left: 9px;
-      width: 72px;
-      height: 70px;
-      border: 3px solid rgba(255,255,255,.88);
-      border-radius: 50%;
-      background: rgba(198,235,255,.16);
-      box-shadow: inset -6px -4px rgba(61,113,168,.12);
-    }
-    .robot {
-      position: absolute;
-      z-index: 1;
-      right: 22%;
-      bottom: 23%;
-      width: 104px;
-      height: 91px;
-      animation: float 4.6s ease-in-out infinite;
-    }
-    .robot-body {
-      position: absolute;
-      top: 16px;
-      left: 24px;
-      width: 61px;
-      height: 48px;
-      border: 3px solid rgba(255,255,255,.7);
-      border-radius: 13px;
-      background: linear-gradient(145deg,#e7b36e,#d98556);
-      box-shadow: inset -7px -6px rgba(103,64,60,.13);
-    }
-    .robot-body::before { position: absolute; top: -20px; left: 23px; width: 5px; height: 18px; background: #60698c; content: ""; }
-    .robot-body::after { position: absolute; top: -25px; left: 19px; width: 13px; height: 13px; border-radius: 50%; background: #ffce67; box-shadow: 0 0 13px rgba(255,208,99,.8); content: ""; }
-    .robot-eye { position: absolute; z-index: 1; top: 16px; left: 13px; width: 7px; height: 8px; border-radius: 50%; background: #34425c; box-shadow: 20px 0 #34425c; }
-    .robot-smile { position: absolute; z-index: 1; top: 30px; left: 18px; width: 14px; height: 6px; border-bottom: 2px solid #9a5147; border-radius: 50%; }
-    .robot-wheel { position: absolute; top: 58px; left: 18px; width: 22px; height: 22px; border: 4px solid #45506a; border-radius: 50%; background: #d3dddb; box-shadow: 45px 0 0 -4px #d3dddb, 45px 0 0 0 #45506a; }
-    .robot-panel { position: absolute; top: 30px; right: 12px; width: 16px; height: 12px; border: 2px solid #6475ac; background: #9dcbe2; }
-    .robot-arm { position: absolute; top: 39px; left: 4px; width: 23px; height: 4px; border-radius: 3px; background: #67728d; transform: rotate(-28deg); }
-    .antenna {
-      position: absolute;
-      top: -21px;
-      right: 9px;
-      width: 29px;
-      height: 24px;
-      border-top: 2px solid #596584;
-      border-radius: 50%;
-      transform: rotate(-22deg);
-    }
-    .robot-seismo .robot-body { width: 69px; height: 53px; border-radius: 22px 22px 10px 10px; background: linear-gradient(145deg,#d9e3da,#8ca4a7); }
-    .robot-seismo .robot-wheel { display: none; }
-    .robot-seismo .robot-body::after { background: #eea279; }
-    .robot-space { right: 28%; bottom: 35%; transform: scale(.92); }
-    .robot-voyager .robot-body { border-radius: 50%; background: linear-gradient(145deg,#e5ce94,#a98c65); }
-    .robot-voyager .robot-wheel, .robot-voyager .robot-eye, .robot-voyager .robot-smile, .robot-voyager .robot-arm { display: none; }
-    .robot-voyager .robot-body::before { top: 19px; left: -21px; width: 22px; height: 3px; transform: rotate(-22deg); }
-    .robot-voyager .robot-body::after { top: 12px; left: 20px; width: 18px; height: 18px; border: 2px solid #f5e4ad; background: transparent; box-shadow: none; }
-    .robot-voyager .antenna { top: 43px; right: -18px; width: 25px; }
-    .record-star {
-      position: absolute;
-      z-index: 1;
-      top: 30%;
-      right: 20%;
-      width: 35px;
-      height: 35px;
-      border: 2px solid #ffdc84;
-      border-radius: 50%;
-      background: repeating-radial-gradient(circle,transparent 0 4px,rgba(255,235,178,.45) 5px 6px);
-      box-shadow: 0 0 0 8px rgba(255,230,150,.08), 0 0 22px rgba(255,230,150,.3);
-    }
-    .stars-scene {
-      position: absolute;
-      top: 17%;
-      left: 16%;
+      top: 19%;
+      left: 13%;
       width: 4px;
       height: 4px;
       border-radius: 50%;
-      background: white;
-      box-shadow: 48px 45px #fff, 107px -8px #fbe0a8, 193px 39px white, 257px 7px #d8d9ff, 297px 89px white;
+      background: #fff8da;
+      box-shadow: 68px 39px #fff8da, 159px -7px #ffe2a3, 244px 68px #fff8da, 341px 14px #dce5ff, 480px 44px #fff8da, 581px -2px #ffe8ba, 703px 64px #fff8da, 817px 11px #dce5ff;
       animation: twinkle 3s ease-in-out infinite alternate;
     }
-    .message-wave {
+    .stage[data-scene="bedroom"] .scene-star,
+    .stage[data-scene="mars"] .scene-star,
+    .stage[data-scene="evening"] .scene-star,
+    .stage[data-scene="home"] .scene-star { opacity: .46; }
+    .cloud {
+      position: absolute;
+      top: 19%;
+      left: 9%;
+      width: 100px;
+      height: 30px;
+      border-radius: 50px;
+      background: rgba(255,255,255,.69);
+      animation: cloud-drift 12s ease-in-out infinite alternate;
+    }
+    .cloud::before, .cloud::after { position: absolute; bottom: 8px; width: 43px; height: 43px; border-radius: 50%; background: inherit; content: ""; }
+    .cloud::before { left: 14px; }
+    .cloud::after { right: 12px; width: 32px; height: 32px; }
+    .cloud-two { top: 27%; left: auto; right: 8%; transform: scale(.7); animation-delay: -3s; }
+    .stage[data-scene="space"] .cloud, .stage[data-scene="bedroom"] .cloud, .stage[data-scene="evening"] .cloud { display: none; }
+    .dune {
+      position: absolute;
+      z-index: -1;
+      right: 25%;
+      bottom: 18%;
+      width: 62%;
+      height: 20%;
+      border-radius: 50%;
+      background: rgba(255,202,138,.46);
+      transform: rotate(-7deg);
+    }
+    .rock {
+      position: absolute;
+      z-index: 0;
+      bottom: 17%;
+      width: 48px;
+      height: 33px;
+      border: 2px solid rgba(255,224,193,.52);
+      border-radius: 48% 52% 28% 24%;
+      background: linear-gradient(145deg,#c7795f,#98564e);
+      box-shadow: inset -7px -5px rgba(89,49,54,.16), 0 7px 8px rgba(102,58,50,.12);
+      transform: rotate(-12deg);
+    }
+    .rock-one { left: 44%; bottom: 16%; width: 67px; height: 43px; }
+    .rock-two { right: 12%; bottom: 17%; width: 36px; height: 26px; transform: rotate(12deg); }
+    .rock-three { left: 12%; bottom: 12%; width: 44px; height: 28px; transform: rotate(5deg); }
+    .stage[data-scene="bedroom"] .rock,
+    .stage[data-scene="space"] .rock,
+    .stage[data-scene="home"] .rock { display: none; }
+    .stage[data-scene="evening"]::after { animation: ground-shiver 5s ease-in-out infinite; }
+    .stage[data-scene="bedroom"] .dune { display: none; }
+    .bed {
+      position: absolute;
+      z-index: 0;
+      bottom: 14%;
+      left: -3%;
+      width: 45%;
+      height: 24%;
+      border: 8px solid #e8b3a2;
+      border-bottom: 0;
+      border-radius: 21px 21px 0 0;
+      background: #82708e;
+      box-shadow: inset 0 12px #f4d0b4;
+    }
+    .bed::before { position: absolute; top: -18px; left: 12%; width: 30%; height: 33px; border-radius: 13px; background: #f5dfc2; content: ""; }
+    .bed::after { position: absolute; top: 10px; right: 7%; width: 48%; height: 54px; border-radius: 12px; background: repeating-linear-gradient(135deg,#ed8f82 0 13px,#f5b69a 13px 26px); content: ""; }
+    .window {
+      position: absolute;
+      top: 10%;
+      left: 12%;
+      width: 21%;
+      height: 30%;
+      border: 9px solid #cf9a88;
+      border-radius: 48% 48% 8px 8px;
+      background: linear-gradient(160deg,#1d2b58,#545786);
+      box-shadow: inset 0 0 0 4px rgba(255,240,198,.35);
+    }
+    .window::before { position: absolute; top: 49%; left: 0; width: 100%; height: 5px; background: #d7a28e; content: ""; }
+    .window::after { position: absolute; top: 0; left: 49%; width: 5px; height: 100%; background: #d7a28e; content: ""; }
+    .radio {
       position: absolute;
       z-index: 2;
-      top: 31%;
-      right: 29%;
-      width: 67px;
-      height: 35px;
-      border-top: 4px dotted #f28178;
-      border-radius: 50%;
-      transform: rotate(-16deg);
-      animation: signal 1.8s ease-in-out infinite alternate;
+      right: 21%;
+      bottom: 26%;
+      width: 74px;
+      height: 62px;
+      border: 4px solid #f6dbac;
+      border-radius: 12px;
+      background: linear-gradient(140deg,#ed9a76,#d87570);
+      box-shadow: 0 8px 0 rgba(87,56,74,.2), 0 0 26px rgba(255,215,132,.35);
+      animation: radio-glow 1.5s ease-in-out infinite alternate;
     }
-    .message-wave::before, .message-wave::after {
+    .radio::before { position: absolute; top: -30px; right: 13px; width: 3px; height: 32px; background: #f4d7a4; transform: rotate(20deg); content: ""; }
+    .radio::after { position: absolute; top: -37px; right: 1px; width: 25px; height: 18px; border: 2px solid rgba(255,242,196,.85); border-color: #fff0c4 transparent transparent; border-radius: 50%; content: ""; }
+    .radio-knob { position: absolute; top: 10px; left: 9px; width: 11px; height: 11px; border-radius: 50%; background: #f8d978; box-shadow: 22px 0 #f8d978; }
+    .radio-speaker { position: absolute; right: 7px; bottom: 7px; left: 7px; height: 21px; border-radius: 5px; background: repeating-linear-gradient(0deg,#a85e67 0 2px,transparent 2px 5px); }
+    .signal-rings { display: none; position: absolute; z-index: 1; top: 30%; right: 18%; width: 88px; height: 70px; border-right: 3px solid rgba(255,232,150,.9); border-radius: 50%; filter: drop-shadow(0 0 8px #ffda7c); animation: signal 1.7s ease-out infinite; }
+    .stage[data-scene="bedroom"] .signal-rings { display: block; }
+    .signal-rings::before, .signal-rings::after { position: absolute; inset: 9px -15px 9px 16px; border-right: 2px solid rgba(255,232,150,.68); border-radius: 50%; content: ""; }
+    .signal-rings::after { inset: 20px -27px 20px 30px; }
+
+    .rocket {
       position: absolute;
-      top: 9px;
-      left: 7px;
-      width: 50px;
-      height: 22px;
-      border-top: 3px dotted #f28178;
-      border-radius: 50%;
-      content: "";
+      z-index: 1;
+      top: 20%;
+      right: 14%;
+      width: 76px;
+      height: 119px;
+      border: 3px solid rgba(255,255,255,.87);
+      border-radius: 50% 50% 19px 19px;
+      background: linear-gradient(90deg,#f6ead0,#fff9e7 56%,#e8cdb5);
+      box-shadow: 0 12px 25px rgba(37,42,76,.18);
+      transform: rotate(22deg);
+      animation: rocket-float 4s ease-in-out infinite;
     }
-    .message-wave::after { top: 17px; left: 17px; width: 30px; }
-    .ending-garden { position: absolute; z-index: 1; right: 10%; bottom: 20%; left: 11%; height: 40%; }
-    .flower { position: absolute; bottom: 0; width: 21px; height: 56px; border-left: 3px solid #527f60; }
-    .flower::before { position: absolute; top: -9px; left: -10px; width: 18px; height: 18px; border-radius: 50%; background: #ffd05d; box-shadow: 0 -9px #f48a93, 8px -3px #f48a93, -8px -3px #f48a93; content: ""; }
-    .flower::after { position: absolute; top: 23px; left: 1px; width: 14px; height: 8px; border-radius: 0 100% 0 100%; background: #75b887; content: ""; transform: rotate(-30deg); }
-    .flower-one { left: 11%; height: 62px; }
-    .flower-two { left: 34%; height: 43px; transform: scale(.78); }
-    .flower-three { right: 10%; height: 67px; transform: scale(1.1); }
-    .controls {
+    .rocket::before { position: absolute; right: -14px; bottom: 9px; width: 22px; height: 35px; border-radius: 0 90% 8px 0; background: #ed8278; content: ""; transform: skewY(-19deg); }
+    .rocket::after { position: absolute; bottom: -29px; left: 20px; width: 29px; height: 34px; border-radius: 10% 10% 50% 50%; background: linear-gradient(#ffd46e,#f28a64,transparent); content: ""; filter: blur(1px); }
+    .rocket-window { position: absolute; top: 37px; left: 22px; width: 28px; height: 28px; border: 4px solid #fff4dd; border-radius: 50%; background: #79b7ca; box-shadow: inset -4px -3px rgba(36,65,89,.2); }
+
+    .leo {
+      position: absolute;
+      z-index: 3;
+      bottom: 16%;
+      left: 21%;
+      width: 100px;
+      height: 178px;
+      transform-origin: bottom center;
+      transition: filter .25s ease;
+    }
+    .leo-head {
+      position: absolute;
+      z-index: 2;
+      top: 4px;
+      left: 27px;
+      width: 53px;
+      height: 54px;
+      border-radius: 47% 47% 45% 45%;
+      background: #f1b58b;
+      box-shadow: inset -5px -4px rgba(167,89,67,.12);
+    }
+    .leo-hair {
+      position: absolute;
+      z-index: 3;
+      top: 0;
+      left: 24px;
+      width: 59px;
+      height: 29px;
+      border-radius: 55% 52% 14% 20%;
+      background: #61444a;
+      transform: rotate(-5deg);
+    }
+    .leo-hair::before, .leo-hair::after { position: absolute; bottom: -11px; width: 19px; height: 22px; border-radius: 5px 4px 12px 12px; background: #61444a; content: ""; }
+    .leo-hair::before { left: 4px; transform: rotate(12deg); }
+    .leo-hair::after { left: 23px; transform: rotate(-8deg); }
+    .leo-eyes { position: absolute; z-index: 4; top: 28px; left: 42px; width: 6px; height: 7px; border-radius: 50%; background: #413446; box-shadow: 22px 0 #413446; }
+    .leo-smile { position: absolute; z-index: 4; top: 42px; left: 52px; width: 13px; height: 7px; border-bottom: 2px solid #a85854; border-radius: 50%; }
+    .leo-body {
+      position: absolute;
+      top: 54px;
+      left: 19px;
+      width: 69px;
+      height: 76px;
+      border: 4px solid rgba(255,255,255,.86);
+      border-radius: 25px 25px 15px 15px;
+      background: linear-gradient(145deg,#ee8878,#dc6b71);
+      box-shadow: inset -6px -6px rgba(139,66,79,.12);
+    }
+    .leo-body::after { position: absolute; top: 11px; left: 15px; width: 12px; height: 11px; border-radius: 4px; background: #ffdc7f; box-shadow: 24px 1px 0 -3px #fff0cc; content: ""; }
+    .leo-arm { position: absolute; z-index: 2; top: 67px; width: 17px; height: 53px; border-radius: 11px; background: #f1b58b; }
+    .leo-arm-left { left: 9px; transform: rotate(18deg); }
+    .leo-arm-right { right: 4px; transform: rotate(-22deg); }
+    .leo-leg { position: absolute; top: 123px; left: 34px; width: 16px; height: 39px; border-radius: 0 0 8px 8px; background: #4c587e; box-shadow: 26px 0 #4c587e; }
+    .leo-shoe { position: absolute; top: 154px; left: 24px; width: 30px; height: 13px; border-radius: 11px 5px 6px 6px; background: #ffd06e; box-shadow: 26px 0 #ffd06e; }
+
+    .machine {
+      position: absolute;
+      z-index: 3;
+      right: 22%;
+      bottom: 18%;
+      width: 146px;
+      height: 153px;
+      transform-origin: bottom center;
+      transition: filter .25s ease;
+    }
+    .machine-shell {
+      position: absolute;
+      top: 37px;
+      left: 27px;
+      width: 92px;
+      height: 68px;
+      border: 4px solid rgba(255,255,255,.78);
+      border-radius: 19px;
+      background: linear-gradient(145deg,#efc181,#d9885c);
+      box-shadow: inset -8px -7px rgba(106,63,59,.13), 0 7px 0 rgba(93,56,58,.12);
+    }
+    .machine-face { position: absolute; top: 20px; left: 20px; width: 8px; height: 9px; border-radius: 50%; background: #3d465d; box-shadow: 26px 0 #3d465d; }
+    .machine-face::after { position: absolute; top: 15px; left: 9px; width: 14px; height: 6px; border-bottom: 2px solid #98534d; border-radius: 50%; content: ""; }
+    .machine-antenna { position: absolute; top: 14px; left: 68px; width: 4px; height: 27px; background: #68718b; }
+    .machine-antenna::after { position: absolute; top: -8px; left: -5px; width: 14px; height: 14px; border-radius: 50%; background: #ffdb79; box-shadow: 0 0 15px rgba(255,220,121,.8); content: ""; }
+    .machine-wheel { position: absolute; bottom: 20px; left: 30px; width: 34px; height: 34px; border: 6px solid #53586c; border-radius: 50%; background: #d8ded1; box-shadow: 58px 0 0 -6px #d8ded1, 58px 0 0 0 #53586c; }
+    .machine-panel { position: absolute; top: 57px; right: 15px; width: 17px; height: 15px; border: 2px solid #7588af; background: #9ed5dc; }
+    .machine-arm { position: absolute; top: 72px; left: 10px; width: 27px; height: 4px; border-radius: 4px; background: #65728e; transform: rotate(-25deg); }
+    .radio-knob, .radio-speaker { display: none; }
+    .machine-radio .radio-knob, .machine-radio .radio-speaker { display: block; }
+    .machine-seismo .machine-shell { left: 25px; width: 96px; height: 78px; border-radius: 34px 34px 13px 13px; background: linear-gradient(145deg,#e2e4d4,#a4b7a9); }
+    .machine-seismo .machine-wheel, .machine-seismo .machine-arm { display: none; }
+    .machine-seismo .machine-shell::after { position: absolute; top: -18px; left: 39px; width: 11px; height: 20px; border-radius: 9px 9px 0 0; background: #d7d9c9; content: ""; }
+    .machine-probe .machine-shell { top: 43px; left: 41px; width: 62px; height: 64px; border-radius: 50%; background: linear-gradient(145deg,#ead8a5,#ae936f); }
+    .machine-probe .machine-wheel, .machine-probe .machine-face, .machine-probe .machine-arm { display: none; }
+    .machine-probe .machine-shell::before { position: absolute; top: 17px; left: -45px; width: 49px; height: 29px; border: 4px solid #e5d49e; border-radius: 50%; content: ""; }
+    .machine-probe .machine-panel { top: 22px; right: -48px; width: 49px; height: 27px; border-color: #e5d49e; border-radius: 50%; background: repeating-radial-gradient(circle,#334b77 0 4px,#6883aa 5px 7px); }
+    .machine-radio { right: 24%; bottom: 24%; transform: scale(.82); }
+    .machine-radio .machine-shell { border-color: #fff0d3; background: linear-gradient(145deg,#ed9c73,#ce6b69); }
+    .machine-radio .machine-wheel, .machine-radio .machine-arm { display: none; }
+    .stage[data-scene="bedroom"] .machine { right: 21%; bottom: 29%; }
+    .stage[data-scene="bedroom"] .machine-shell { top: 42px; height: 68px; }
+    .stage[data-scene="bedroom"] .machine-wheel { display: none; }
+    .stage[data-scene="bedroom"] .machine-antenna { top: 11px; }
+    .stage[data-scene="space"] .machine { right: 23%; bottom: 29%; transform: scale(.92); }
+    .stage[data-scene="evening"] .machine { right: 21%; bottom: 19%; }
+    .stage[data-scene="evening"] .machine-shell { border-color: rgba(255,255,255,.83); }
+
+    .friends { position: absolute; z-index: 1; inset: 10% 10% auto; display: flex; justify-content: space-between; }
+    .friend-star { position: relative; width: 24px; height: 24px; border-radius: 50%; background: #ffe9a7; box-shadow: 0 0 0 8px rgba(255,233,167,.12), 0 0 23px #ffe9a7; animation: star-float 3s ease-in-out infinite alternate; }
+    .friend-star:nth-child(2) { margin-top: 37px; animation-delay: -.8s; }
+    .friend-star:nth-child(3) { margin-top: 7px; animation-delay: -1.7s; }
+    .friend-star:nth-child(4) { margin-top: 46px; animation-delay: -2.4s; }
+    .friend-star::before, .friend-star::after { position: absolute; top: 5px; left: 5px; width: 4px; height: 5px; border-radius: 50%; background: #67546d; box-shadow: 8px 0 #67546d; content: ""; }
+    .friend-star::after { top: 12px; left: 8px; width: 7px; height: 4px; border: 0; border-bottom: 1px solid #a35b64; background: transparent; box-shadow: none; }
+    .home-window { position: absolute; top: 13%; right: 10%; width: 21%; height: 30%; border: 9px solid #e5a78b; border-radius: 50% 50% 10px 10px; background: #263361; box-shadow: inset 0 0 0 4px rgba(255,239,196,.35); }
+
+    .speech-area {
+      position: absolute;
+      z-index: 5;
+      top: 20px;
+      right: 22px;
+      left: 22px;
       display: flex;
-      width: min(1050px, 100%);
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      margin: clamp(21px, 4vh, 34px) auto 0;
+      max-height: 57%;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      gap: 8px;
+      overflow: hidden;
+      pointer-events: none;
     }
-    .button {
-      display: inline-flex;
-      min-height: 54px;
+    .speech-bubble {
+      position: relative;
+      width: fit-content;
+      max-width: min(63%, 510px);
+      padding: 9px 16px 11px;
+      border: 2px solid rgba(87,66,72,.12);
+      border-radius: 19px;
+      background: #fffaf0;
+      color: #493944;
+      box-shadow: 0 5px 13px rgba(58,45,65,.1);
+      font: 1rem/1.34 var(--serif);
+      overflow-wrap: anywhere;
+      animation: bubble-in .34s cubic-bezier(.2,.7,.25,1) both;
+    }
+    .speech-bubble::after {
+      position: absolute;
+      bottom: -9px;
+      left: 25px;
+      width: 15px;
+      height: 15px;
+      border-right: 2px solid rgba(87,66,72,.12);
+      border-bottom: 2px solid rgba(87,66,72,.12);
+      background: inherit;
+      content: "";
+      transform: rotate(45deg);
+    }
+    .speech-bubble.machine-line { align-self: flex-end; background: #e5f7f0; }
+    .speech-bubble.machine-line::after { right: 27px; left: auto; }
+    .speech-bubble.active { z-index: 1; border-color: rgba(237,130,120,.58); box-shadow: 0 6px 22px rgba(59,43,59,.16); }
+    .speech-bubble.machine-line.active { border-color: rgba(96,174,151,.75); }
+    .speaker-name { display: block; margin-bottom: 2px; color: #a44f59; font: 800 .66rem/1.2 var(--sans); letter-spacing: .06em; text-transform: uppercase; }
+    .machine-line .speaker-name { color: #357b6a; }
+    .bubble-text.typing { display: inline-flex; gap: 5px; min-width: 37px; align-items: center; padding: 5px 0 2px; }
+    .typing-dot { width: 7px; height: 7px; border-radius: 50%; background: #bd8c70; animation: typing .55s ease-in-out infinite alternate; }
+    .typing-dot:nth-child(2) { animation-delay: .13s; }
+    .typing-dot:nth-child(3) { animation-delay: .26s; }
+    .speech-bubble:not(.active) { opacity: .76; transform: scale(.96); transform-origin: top left; }
+    .speech-bubble.machine-line:not(.active) { transform-origin: top right; }
+    .stage[data-speaker="leo"] .leo { animation: character-speak .65s ease-in-out; filter: drop-shadow(0 0 12px rgba(255,214,119,.85)); }
+    .stage[data-speaker="machine"] .machine { animation: machine-speak .72s ease-in-out; filter: drop-shadow(0 0 15px rgba(133,238,211,.8)); }
+    .stage[data-scene="home"][data-speaker="machine"] .friend-star { animation: star-speak .75s ease-in-out infinite alternate; }
+    .stage[data-speaker="radio"] .machine { animation: machine-speak .72s ease-in-out; filter: drop-shadow(0 0 18px rgba(255,220,121,.95)); }
+    .radio-copy { position: absolute; z-index: 4; right: 30%; bottom: 42%; color: #fff2bf; font: italic 1.1rem var(--serif); text-shadow: 0 0 14px #ffd66e; animation: twinkle 1s infinite alternate; }
+    .radio-copy[hidden] { display: none; }
+
+    .stage-caption {
+      position: absolute;
+      z-index: 4;
+      right: 17px;
+      bottom: 11px;
+      color: rgba(255,250,231,.91);
+      font-size: .65rem;
+      font-weight: 800;
+      letter-spacing: .07em;
+      text-shadow: 0 1px 5px rgba(39,31,55,.52);
+      text-transform: uppercase;
+    }
+    .stage[data-scene="bedroom"] .storytelling-label,
+    .stage[data-scene="mars"] .storytelling-label { color: rgba(71,44,47,.82); text-shadow: none; }
+    .storytelling-label {
+      position: absolute;
+      z-index: 4;
+      bottom: 11px;
+      left: 17px;
+      color: rgba(255,250,231,.84);
+      font-size: .59rem;
+      font-weight: 800;
+      letter-spacing: .07em;
+      text-shadow: 0 1px 5px rgba(39,31,55,.52);
+      text-transform: uppercase;
+    }
+    .stage[data-scene="bedroom"] .stage-caption,
+    .stage[data-scene="mars"] .stage-caption { color: rgba(83,49,53,.8); text-shadow: none; }
+
+    .story-controls {
+      display: grid;
+      width: min(1160px, 100%);
+      grid-template-columns: 1fr auto 1fr;
       align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 10px 23px;
+      gap: 12px;
+      padding-top: 13px;
+    }
+    .control-left { justify-self: start; }
+    .control-right { justify-self: end; }
+    .continue-button {
+      min-width: 190px;
+      min-height: 54px;
+      padding: 10px 24px;
       border: 0;
       border-radius: 999px;
+      background: var(--coral);
+      color: #482e39;
       cursor: pointer;
-      font-size: .98rem;
-      font-weight: 800;
-      text-decoration: none;
-      box-shadow: 0 5px 0 rgba(42,57,106,.15);
+      font-size: 1.03rem;
+      font-weight: 900;
+      box-shadow: 0 6px 0 rgba(132,70,72,.2);
       transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
     }
-    .button:hover { transform: translateY(-2px); box-shadow: 0 7px 0 rgba(42,57,106,.13); filter: brightness(1.04); }
-    .button:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(42,57,106,.15); }
-    .button-next { background: var(--blue); color: white; }
-    .button-back { border: 2px solid rgba(55,74,130,.2); background: rgba(255,255,255,.65); color: #354978; box-shadow: none; }
-    .button-back:hover { background: white; }
-    .button-back:disabled { opacity: .43; cursor: not-allowed; transform: none; }
-    .button-restart { background: #e98594; color: #392b45; }
-    .book-spine {
-      width: 115px;
-      height: 6px;
-      overflow: hidden;
-      border-radius: 99px;
-      background: rgba(54,73,125,.14);
+    .continue-button:hover { transform: translateY(-2px); box-shadow: 0 8px 0 rgba(132,70,72,.17); filter: brightness(1.05); }
+    .continue-button:active { transform: translateY(2px); box-shadow: 0 3px 0 rgba(132,70,72,.18); }
+    .continue-button:disabled { opacity: .75; cursor: wait; }
+    .back-button, .restart-button {
+      min-height: 43px;
+      padding: 8px 16px;
+      border: 1px solid rgba(95,65,68,.18);
+      border-radius: 999px;
+      background: rgba(255,255,255,.68);
+      color: #68484b;
+      cursor: pointer;
+      font-size: .82rem;
+      font-weight: 800;
     }
-    .book-spine-fill { width: 16.6667%; height: 100%; border-radius: inherit; background: linear-gradient(90deg,#f28d8e,#ffc964,#62bdab); transition: width .35s ease; }
+    .back-button:disabled { opacity: .42; cursor: not-allowed; }
+    .science-wrap { justify-self: end; }
+    .science-button {
+      padding: 8px 11px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: #76594d;
+      cursor: pointer;
+      font-size: .75rem;
+      font-weight: 800;
+      text-decoration: underline;
+      text-decoration-color: rgba(118,89,77,.38);
+      text-underline-offset: 4px;
+    }
+    .science-button:hover { color: #a24f51; }
+    .science-clue {
+      position: fixed;
+      z-index: 9;
+      right: max(20px, calc((100vw - 600px)/2));
+      bottom: 91px;
+      width: min(410px, calc(100vw - 32px));
+      padding: 17px 19px;
+      border: 2px solid rgba(225,162,94,.65);
+      border-radius: 18px;
+      background: #fff9e9;
+      color: #574249;
+      box-shadow: 0 14px 40px rgba(59,43,52,.2);
+      animation: bubble-in .25s ease both;
+    }
+    .science-clue strong { display: block; margin-bottom: 5px; color: #9b554e; font-size: .76rem; letter-spacing: .06em; text-transform: uppercase; }
+    .science-clue p { margin: 0; font-size: .88rem; }
+
     .sources-page { width: min(760px, 100%); margin: auto; }
-    .sources-page h1 { font-size: clamp(2.4rem, 5vw, 3.8rem); }
-    .sources-page > p { max-width: 650px; color: #414f70; }
-    .source-list { display: grid; gap: 10px; margin: 24px 0; padding: 0; list-style: none; }
+    .sources-page h1 { margin: 17px 0 10px; font: 700 clamp(2.5rem,6vw,4.4rem)/1 var(--serif); letter-spacing: -.05em; }
+    .sources-page > p { max-width: 650px; color: var(--soft-ink); }
+    .source-list { display: grid; gap: 9px; margin: 23px 0; padding: 0; list-style: none; }
     .source-list a {
       display: flex;
-      min-height: 55px;
+      min-height: 50px;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
-      padding: 12px 16px;
-      border: 2px solid rgba(57,78,139,.14);
+      gap: 12px;
+      padding: 10px 15px;
+      border: 1px solid rgba(102,68,70,.15);
       border-radius: 13px;
-      background: rgba(255,255,255,.73);
-      color: #334577;
-      font-size: .92rem;
-      font-weight: 700;
+      background: rgba(255,255,255,.72);
+      color: #604449;
+      font-size: .87rem;
+      font-weight: 800;
       text-decoration: none;
-      transition: transform .18s ease, border-color .18s ease;
     }
-    .source-list a:hover { transform: translateX(3px); border-color: #8498e2; }
-    .source-arrow { flex: 0 0 auto; color: #667ac7; }
-    .source-note { padding: 13px 15px; border-left: 4px solid #efbd43; border-radius: 0 9px 9px 0; background: #fff6d8; color: #53607b; font-size: .82rem; }
+    .source-list a:hover { border-color: #dd9b84; background: white; }
+    .source-note { padding: 12px 14px; border-left: 4px solid #e7ae4f; background: #fff9e8; color: #6b5554; font-size: .79rem; }
+    .source-controls { display: flex; justify-content: space-between; gap: 12px; margin-top: 20px; }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
-    @keyframes twinkle { from { opacity: .45; } to { opacity: 1; } }
-    @keyframes float { 0%,100% { translate: 0 0; } 50% { translate: 0 -8px; } }
-    @keyframes signal { from { opacity: .5; scale: .94; } to { opacity: 1; scale: 1.08; } }
-    @keyframes page-in { from { opacity: 0; translate: 0 12px; } to { opacity: 1; translate: 0 0; } }
+    @keyframes twinkle { from { opacity: .48; } to { opacity: 1; } }
+    @keyframes cloud-drift { from { translate: -5px 0; } to { translate: 17px 4px; } }
+    @keyframes ground-shiver { 0%,88%,100% { transform: translateX(0); } 90% { transform: translateX(2px); } 92% { transform: translateX(-2px); } 94% { transform: translateX(1px); } }
+    @keyframes sun-glow { from { scale: .96; opacity: .82; } to { scale: 1.04; opacity: 1; } }
+    @keyframes radio-glow { from { box-shadow: 0 8px 0 rgba(87,56,74,.2),0 0 18px rgba(255,215,132,.25); } to { box-shadow: 0 8px 0 rgba(87,56,74,.2),0 0 33px rgba(255,215,132,.8); } }
+    @keyframes signal { from { transform: scale(.82); opacity: .2; } to { transform: scale(1.12); opacity: .95; } }
+    @keyframes rocket-float { 0%,100% { translate: 0 0; } 50% { translate: 5px -12px; } }
+    @keyframes character-speak { 0%,100% { translate: 0 0; } 40% { translate: 0 -8px; } 70% { translate: 0 -3px; } }
+    @keyframes machine-speak { 0%,100% { translate: 0 0; } 40% { translate: 0 -7px; rotate: -2deg; } 70% { translate: 0 -2px; rotate: 1deg; } }
+    @keyframes star-speak { from { scale: 1; filter: drop-shadow(0 0 5px #ffe9a7); } to { scale: 1.28; filter: drop-shadow(0 0 20px #ffe9a7); } }
+    @keyframes typing { from { transform: translateY(2px); opacity: .45; } to { transform: translateY(-2px); opacity: 1; } }
+    @keyframes bubble-in { from { opacity: 0; transform: translateY(7px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes page-in { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes page-turn { 0% { opacity: 1; transform: perspective(1200px) rotateY(0); } 45% { opacity: .55; transform: perspective(1200px) rotateY(-7deg) translateX(-8px); } 100% { opacity: 1; transform: perspective(1200px) rotateY(0); } }
 
-    @media (max-width: 720px) {
-      .topbar { width: calc(100% - 32px); min-height: 66px; }
-      .page-inner { width: min(560px, 100%); grid-template-columns: 1fr; gap: 22px; }
-      .story-page { justify-content: flex-start; padding: 23px 19px 24px; }
-      .story-copy { max-width: none; }
-      .page-label { font-size: .66rem; }
-      h1 { margin: 13px 0 9px; font-size: clamp(2.15rem, 9.5vw, 3.4rem); }
-      .chapter-story { font-size: 1rem; line-height: 1.53; }
-      .machine-notes { gap: 7px; margin-top: 14px; }
-      .note { padding: 8px 10px; font-size: .76rem; }
-      .scene-wrap { grid-row: 1; min-height: clamp(215px, 55vw, 315px); max-height: 315px; }
-      .controls { margin-top: 22px; }
-      .button { min-height: 49px; padding: 9px 18px; font-size: .9rem; }
-      .book-spine { width: 66px; }
+    @media (max-width: 700px) {
+      .topbar { width: calc(100% - 28px); min-height: 55px; }
+      .book-title { font-size: .71rem; }
+      .top-tools { gap: 8px; }
+      .scene-count { font-size: .68rem; }
+      .small-button { min-height: 34px; padding-inline: 10px; font-size: .69rem; }
+      .story-page { justify-content: flex-start; padding: 5px 12px 12px; }
+      .stage { height: clamp(475px, 73svh, 620px); min-height: 470px; border-width: 4px; border-radius: 29px; }
+      .stage::before { width: 47px; }
+      .speech-area { top: 13px; right: 12px; left: 12px; max-height: 48%; gap: 6px; }
+      .speech-bubble { max-width: 78%; padding: 7px 11px 9px; border-radius: 16px; font-size: .91rem; line-height: 1.27; }
+      .speaker-name { font-size: .59rem; }
+      .leo { bottom: 14%; left: 8%; transform: scale(.81); transform-origin: bottom left; }
+      .machine { right: 6%; bottom: 14%; transform: scale(.9); transform-origin: bottom right; }
+      .stage[data-scene="bedroom"] .machine { right: 11%; bottom: 22%; transform: scale(.76); }
+      .stage[data-scene="space"] .machine { right: 6%; bottom: 25%; transform: scale(.78); }
+      .stage[data-scene="evening"] .machine { right: 5%; bottom: 14%; transform: scale(.84); }
+      .stage[data-scene="home"] .leo { left: 7%; }
+      .bed { width: 73%; height: 17%; left: -6%; bottom: 11%; }
+      .window { top: 10%; left: 9%; width: 29%; height: 24%; border-width: 6px; }
+      .radio { right: 15%; bottom: 22%; transform: scale(.8); }
+      .signal-rings { top: 33%; right: 13%; transform: scale(.7); }
+      .rocket { top: 26%; right: 12%; transform: rotate(22deg) scale(.7); }
+      .scene-count { letter-spacing: -.02em; }
+      .story-controls { grid-template-columns: auto 1fr auto; gap: 6px; padding-top: 8px; }
+      .continue-button { grid-column: 2; grid-row: 1; min-width: 0; width: 100%; min-height: 50px; padding: 8px 12px; font-size: .95rem; }
+      .control-left { grid-column: 1; grid-row: 1; }
+      .control-right { grid-column: 3; grid-row: 1; }
+      .back-button, .restart-button { min-height: 41px; padding: 7px 11px; font-size: .74rem; }
+      .science-wrap { grid-column: 1 / -1; grid-row: 2; justify-self: center; }
+      .science-button { padding: 4px 9px; font-size: .72rem; }
+      .science-clue { right: 12px; bottom: 92px; }
+      .sources-page { padding: 14px 5px; }
+      .source-list a { font-size: .8rem; }
     }
-    @media (max-width: 420px) {
-      body { font-size: 16px; }
-      .wordmark { font-size: .7rem; }
-      .top-actions { gap: 8px; }
-      .chapter-count { font-size: .73rem; }
-      .sources-link { min-height: 37px; padding-inline: 11px; font-size: .74rem; }
-      .story-page { padding-inline: 16px; }
-      .scene-wrap { min-height: 210px; }
-      .note { font-size: .73rem; }
-      .controls { gap: 8px; }
-      .button { gap: 6px; padding-inline: 14px; font-size: .83rem; }
-      .book-spine { width: 39px; }
+    @media (max-width: 390px) {
+      .book-title { max-width: 168px; }
+      .stage { height: 70svh; min-height: 445px; }
+      .speech-bubble { max-width: 84%; font-size: .85rem; }
+      .leo { left: 4%; transform: scale(.71); }
+      .machine { right: 2%; transform: scale(.79); }
+      .stage[data-scene="bedroom"] .machine { right: 8%; transform: scale(.7); }
+      .back-button, .restart-button { padding-inline: 8px; font-size: .69rem; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
@@ -505,270 +645,379 @@
   </style>
 </head>
 <body>
+  <div class="page-stars" aria-hidden="true"></div>
   <div class="book">
-    <div class="sky-dots" aria-hidden="true"></div>
     <header class="topbar">
-      <a class="wordmark" href="#" id="home-link"><span class="wordmark-star" aria-hidden="true">✦</span> Leo and the Lost Space Machines</a>
-      <div class="top-actions">
-        <div class="chapter-count" id="chapter-count" aria-live="polite">Chapter <strong>1</strong> of 6</div>
-        <button class="sources-link" id="sources-button" type="button">Sources</button>
+      <a class="book-title" href="#" id="home-link"><span aria-hidden="true">✦</span> Leo and the Lost Space Machines</a>
+      <div class="top-tools">
+        <div class="scene-count" id="scene-count" aria-live="polite">Scene <strong>1</strong> of 6</div>
+        <button class="small-button" id="sources-toggle" type="button">Sources</button>
       </div>
     </header>
 
-    <main class="story-page" id="story-page" aria-live="polite">
-      <div class="page-inner">
-        <article class="story-copy">
-          <span class="page-label" id="page-label"></span>
-          <h1 id="chapter-title" tabindex="-1"></h1>
-          <p class="chapter-story" id="chapter-story"></p>
-          <div class="machine-notes" id="machine-notes"></div>
-        </article>
-        <div class="scene-wrap" id="scene" role="img">
-          <span class="cloud" aria-hidden="true"></span>
-          <span class="cloud cloud-two" aria-hidden="true"></span>
-          <span class="hill" aria-hidden="true"></span>
-          <span class="stars-scene" aria-hidden="true"></span>
-          <span class="message-wave" aria-hidden="true"></span>
-          <div class="leo" id="leo" aria-hidden="true">
-            <span class="leo-hair"></span><span class="leo-head"></span><span class="leo-eye"></span><span class="leo-smile"></span>
-            <span class="leo-body"></span><span class="leo-arm left"></span><span class="leo-arm right"></span><span class="leo-leg"></span><span class="leo-shoe"></span>
-          </div>
-          <div class="robot" id="robot" aria-hidden="true">
-            <span class="robot-body"><i class="robot-eye"></i><i class="robot-smile"></i><i class="robot-panel"></i></span>
-            <span class="robot-wheel"></span><span class="robot-arm"></span><span class="antenna"></span>
-          </div>
-          <span class="record-star" aria-hidden="true"></span>
-          <span class="ending-garden" aria-hidden="true"><i class="flower flower-one"></i><i class="flower flower-two"></i><i class="flower flower-three"></i></span>
-          <span class="scene-caption" id="scene-caption" aria-hidden="true"></span>
+    <main class="story-page" id="story-page">
+      <h1 class="sr-only">Leo and the Lost Space Machines</h1>
+      <section class="stage" id="stage" data-scene="bedroom" data-speaker="leo" aria-label="Leo's bedroom at night">
+        <span class="scene-star" aria-hidden="true"></span>
+        <span class="cloud cloud-one" aria-hidden="true"></span>
+        <span class="cloud cloud-two" aria-hidden="true"></span>
+        <span class="dune" id="dune" aria-hidden="true"></span>
+        <span class="rock rock-one" aria-hidden="true"></span>
+        <span class="rock rock-two" aria-hidden="true"></span>
+        <span class="rock rock-three" aria-hidden="true"></span>
+        <span class="window" id="window" aria-hidden="true"></span>
+        <span class="bed" id="bed" aria-hidden="true"></span>
+        <span class="rocket" id="rocket" aria-hidden="true"><i class="rocket-window"></i></span>
+        <span class="home-window" id="home-window" aria-hidden="true"></span>
+        <div class="friends" id="friends" aria-hidden="true" hidden>
+          <i class="friend-star"></i><i class="friend-star"></i><i class="friend-star"></i><i class="friend-star"></i>
         </div>
-      </div>
-      <nav class="controls" aria-label="Story navigation">
-        <button class="button button-back" id="back-button" type="button">← Back</button>
-        <div class="book-spine" role="progressbar" aria-label="Story progress" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1" id="book-spine">
-          <div class="book-spine-fill" id="spine-fill"></div>
+        <div class="speech-area" id="speech-area" aria-live="off"></div>
+        <span class="radio-copy" id="radio-copy" aria-hidden="true" hidden>psst…</span>
+        <div class="leo" id="leo" role="img" aria-label="Leo">
+          <span class="leo-hair"></span><span class="leo-head"></span><span class="leo-eyes"></span><span class="leo-smile"></span>
+          <span class="leo-body"></span><span class="leo-arm leo-arm-left"></span><span class="leo-arm leo-arm-right"></span><span class="leo-leg"></span><span class="leo-shoe"></span>
         </div>
-        <button class="button button-next" id="next-button" type="button">Next Chapter <span aria-hidden="true">→</span></button>
+        <div class="machine machine-radio" id="machine" role="img" aria-label="The space machine">
+          <span class="machine-antenna"></span>
+          <span class="machine-shell"><i class="machine-face"></i><i class="machine-panel"></i><i class="radio-knob"></i><i class="radio-speaker"></i></span>
+          <span class="machine-wheel"></span><span class="machine-arm"></span>
+        </div>
+        <span class="signal-rings" id="signal-rings" aria-hidden="true"></span>
+        <span class="storytelling-label">Creative storytelling</span>
+        <span class="stage-caption" id="stage-caption" aria-hidden="true">Leo’s bedroom · late at night</span>
+      </section>
+
+      <nav class="story-controls" aria-label="Story controls">
+        <div class="control-left"><button class="back-button" id="back-button" type="button">← Back</button></div>
+        <button class="continue-button" id="continue-button" type="button">Continue <span aria-hidden="true">→</span></button>
+        <div class="control-right"><button class="restart-button" id="restart-button" type="button">Restart Story</button></div>
+        <div class="science-wrap"><button class="science-button" id="science-button" type="button" aria-expanded="false" aria-controls="science-clue">✦ Science clue</button></div>
       </nav>
+      <aside class="science-clue" id="science-clue" role="status" aria-live="polite" hidden>
+        <strong>A little true thing</strong>
+        <p id="science-text"></p>
+      </aside>
     </main>
 
     <main class="story-page" id="sources-page" hidden>
-      <article class="sources-page">
-        <span class="page-label">A little more space to explore</span>
-        <h1 tabindex="-1" id="sources-title">Leo’s space bookshelf</h1>
-        <p>These real missions and discoveries come from NASA and the Jet Propulsion Laboratory. Leo’s conversations with the machines are make-believe storytelling.</p>
+      <section class="sources-page">
+        <span class="page-label">The real stories behind Leo’s adventure</span>
+        <h1 tabindex="-1" id="sources-title">A little more about the explorers</h1>
+        <p>These are real missions and discoveries. The conversations in this story are creative storytelling—not real recordings or quotations.</p>
         <ul class="source-list">
-          <li><a href="https://science.nasa.gov/mission/mer-opportunity/" target="_blank" rel="noopener noreferrer"><span>NASA · Opportunity mission</span><span class="source-arrow" aria-hidden="true">↗</span></a></li>
-          <li><a href="https://www.jpl.nasa.gov/missions/mars-exploration-rover-opportunity-mer/" target="_blank" rel="noopener noreferrer"><span>JPL · Mars Exploration Rover</span><span class="source-arrow" aria-hidden="true">↗</span></a></li>
-          <li><a href="https://science.nasa.gov/mission/insight/science-instruments/" target="_blank" rel="noopener noreferrer"><span>NASA · InSight science instruments</span><span class="source-arrow" aria-hidden="true">↗</span></a></li>
-          <li><a href="https://www.jpl.nasa.gov/missions/mars-pathfinder-sojourner-rover/" target="_blank" rel="noopener noreferrer"><span>JPL · Mars Pathfinder and Sojourner</span><span class="source-arrow" aria-hidden="true">↗</span></a></li>
-          <li><a href="https://science.nasa.gov/mission/voyager/voyager-1/" target="_blank" rel="noopener noreferrer"><span>NASA · Voyager 1</span><span class="source-arrow" aria-hidden="true">↗</span></a></li>
+          <li><a href="https://science.nasa.gov/mission/mer-opportunity/" target="_blank" rel="noopener noreferrer">NASA · Opportunity mission <span aria-hidden="true">↗</span></a></li>
+          <li><a href="https://www.jpl.nasa.gov/missions/mars-exploration-rover-opportunity-mer/" target="_blank" rel="noopener noreferrer">JPL · Mars Exploration Rover <span aria-hidden="true">↗</span></a></li>
+          <li><a href="https://science.nasa.gov/mission/insight/science-instruments/" target="_blank" rel="noopener noreferrer">NASA · InSight science instruments <span aria-hidden="true">↗</span></a></li>
+          <li><a href="https://www.jpl.nasa.gov/missions/mars-pathfinder-sojourner-rover/" target="_blank" rel="noopener noreferrer">JPL · Mars Pathfinder and Sojourner <span aria-hidden="true">↗</span></a></li>
+          <li><a href="https://science.nasa.gov/mission/voyager/voyager-1/" target="_blank" rel="noopener noreferrer">NASA · Voyager 1 <span aria-hidden="true">↗</span></a></li>
         </ul>
-        <p class="source-note">Scientific facts are based on NASA and NASA Jet Propulsion Laboratory mission pages. First-person machine dialogue is creative storytelling, not a real quotation.</p>
-      </article>
-      <nav class="controls" aria-label="Sources navigation">
-        <button class="button button-back" id="sources-back" type="button">← Back to story</button>
-        <span></span>
-        <button class="button button-next" id="sources-restart" type="button">Restart Story <span aria-hidden="true">↻</span></button>
-      </nav>
+        <p class="source-note">Scientific facts come from NASA and NASA Jet Propulsion Laboratory mission pages. Character dialogue is creative storytelling.</p>
+        <div class="source-controls">
+          <button class="back-button" id="sources-back" type="button">← Back to story</button>
+          <button class="restart-button" id="sources-restart" type="button">Restart Story</button>
+        </div>
+      </section>
     </main>
   </div>
   <div class="sr-only" id="announcer" aria-live="polite" aria-atomic="true"></div>
+
   <script>
     (() => {
       const chapters = [
         {
-          title: "Leo and the Mysterious Message",
-          label: "Chapter 1 · A curious beginning",
-          scene: "message",
-          caption: "A message, from far away",
-          robot: "",
-          helmet: true,
-          story: "One quiet night, Leo’s radio crackled: “Can anyone hear us?” Four space machines were calling from far away. Leo packed a snack and set off to find them.",
-          name: "the four explorers",
-          purpose: "explore, observe, and listen on worlds near and far",
-          achievement: "They helped us learn about Mars and became the first human-made explorer to enter interstellar space.",
-          voice: "Hello, Leo! Follow our signals, and we’ll show you what we found.",
-          fact: "The four explorers worked in very different places—from the ground on Mars to interstellar space."
+          scene: "bedroom",
+          caption: "Leo’s bedroom · late at night",
+          science: "Spacecraft can send messages to Earth using radio waves—signals that travel through space.",
+          dialogue: [
+            ["Leo", "leo", "Was that a voice from space?"],
+            ["Radio", "radio", "Leo... we need a curious explorer."],
+            ["Leo", "leo", "Then I am coming!"]
+          ]
         },
         {
-          title: "A Little Rover Named Sojourner",
-          label: "Chapter 2 · Hello, Mars!",
-          scene: "sojourner",
-          caption: "Mars · 1997",
-          robot: "robot-rover",
-          story: "Leo landed on rusty-red Mars and met Sojourner, a rover small enough to roll around its landing place. It explored rocks and soil, taking pictures as it went. Sojourner was the first wheeled vehicle used on another planet.",
-          name: "Sojourner · Mars rover",
-          purpose: "Explore nearby Martian rocks and soil and show that a small rover could drive on another planet.",
-          achievement: "The first wheeled vehicle used on another planet; planned for seven days, it operated for 83 days.",
-          voice: "I was little, but I rolled where no wheels had rolled before!",
-          fact: "Sojourner rode to Mars aboard the Pathfinder lander in 1997."
+          scene: "mars",
+          caption: "Mars · the Pathfinder mission",
+          machine: "Sojourner",
+          machineClass: "machine-rover",
+          science: "Sojourner explored Mars during Pathfinder in 1997. Planned for seven days, it operated for 83 days.",
+          dialogue: [
+            ["Leo", "leo", "You are so small! Can you really explore Mars?"],
+            ["Sojourner", "machine", "I can roll, take pictures, and study rocks and soil."],
+            ["Leo", "leo", "What did you prove?"],
+            ["Sojourner", "machine", "I became the first wheeled vehicle used on another planet."]
+          ]
         },
         {
-          title: "Opportunity Keeps Going",
-          label: "Chapter 3 · The long adventure",
-          scene: "opportunity",
-          caption: "Mars · Meridiani Planum",
-          robot: "robot-rover",
-          story: "Next, Leo found Opportunity exploring a wide, dusty plain. The rover looked at Martian rocks for signs of places shaped by liquid water long ago. It was designed for 90 Martian days, but it worked for almost 15 years!",
-          name: "Opportunity · Mars rover",
-          purpose: "Search for signs that ancient Mars had environments affected by liquid water.",
-          achievement: "Found evidence that ancient Mars had environments affected by liquid water.",
-          voice: "Ninety days was the plan. Then I kept rolling, and rolling, and rolling!",
-          fact: "After a global dust storm, NASA received Opportunity’s final communication on June 10, 2018. NASA declared the mission complete in February 2019."
+          scene: "mars",
+          caption: "Mars · a rocky plain",
+          machine: "Opportunity",
+          machineClass: "machine-rover",
+          science: "NASA received Opportunity’s final communication on June 10, 2018, after a global dust storm. NASA declared the mission complete in 2019.",
+          dialogue: [
+            ["Leo", "leo", "How long were you supposed to stay?"],
+            ["Opportunity", "machine", "Only 90 Martian days."],
+            ["Leo", "leo", "Only 90? Then why are you still here?"],
+            ["Opportunity", "machine", "I kept going for almost 15 years!"],
+            ["Leo", "leo", "What did you find?"],
+            ["Opportunity", "machine", "Clues that liquid water once affected ancient Mars."]
+          ]
         },
         {
-          title: "InSight Listens to Mars",
-          label: "Chapter 4 · A planet’s heartbeat",
-          scene: "insight",
-          caption: "Mars · Listening closely",
-          robot: "robot-seismo",
-          story: "A gentle thump came from the ground: InSight was listening! Its special seismometer measured marsquakes and other shakes. Those tiny wiggles helped scientists learn about the inside of Mars.",
-          name: "InSight · Mars lander",
-          purpose: "Study the deep inside of Mars without moving from its landing place.",
-          achievement: "Its seismometer measured marsquakes, meteorite impacts, and vibrations, helping scientists learn about Mars’ outer layer, middle layer, and center.",
-          voice: "I stayed in one spot and listened to Mars whisper from deep below.",
-          fact: "A seismometer is a tool that measures shaking and vibrations."
+          scene: "evening",
+          caption: "Mars · a quiet evening",
+          machine: "InSight",
+          machineClass: "machine-seismo",
+          science: "InSight used SEIS, a seismometer—a tool that measures shaking—to study marsquakes, meteorite impacts, and Mars’ inside.",
+          dialogue: [
+            ["Leo", "leo", "Why are you not moving?"],
+            ["InSight", "machine", "Because I am listening."],
+            ["Leo", "leo", "Listening to what?"],
+            ["InSight", "machine", "The tiny shakes of Mars."],
+            ["Leo", "leo", "What can a shake tell you?"],
+            ["InSight", "machine", "It can reveal what is hidden deep inside a planet."]
+          ]
         },
         {
-          title: "Voyager 1’s Starry Journey",
-          label: "Chapter 5 · Beyond the planets",
-          scene: "voyager",
-          caption: "Still traveling through interstellar space",
-          robot: "robot-voyager",
-          story: "Leo followed a faraway blinking light and found Voyager 1, still traveling through interstellar space. It carries the Golden Record, with sounds, pictures, music, and greetings from Earth. Voyager 1 became the first human-made object to enter interstellar space.",
-          name: "Voyager 1 · Deep-space probe",
-          purpose: "Explore the outer solar system and continue traveling outward into interstellar space.",
-          achievement: "The first human-made object to enter interstellar space.",
-          voice: "I carry a little hello from Earth as I travel between the stars.",
-          fact: "The Golden Record is a gold-plated copper disc carrying sounds, images, music, and greetings from Earth. Voyager is traveling through space beyond the Sun’s bubble."
+          scene: "space",
+          caption: "Far beyond the planets",
+          machine: "Voyager 1",
+          machineClass: "machine-probe",
+          science: "Voyager 1 was the first human-made object to enter interstellar space. It carries the Golden Record.",
+          dialogue: [
+            ["Leo", "leo", "Are you going to land somewhere?"],
+            ["Voyager 1", "machine", "No. I am still traveling through interstellar space."],
+            ["Leo", "leo", "Did you take something from Earth?"],
+            ["Voyager 1", "machine", "I carry a Golden Record with sounds, music, pictures, and greetings."],
+            ["Leo", "leo", "A hello from Earth?"],
+            ["Voyager 1", "machine", "Exactly. A hello for anyone who may find it."]
+          ]
         },
         {
-          title: "The Story That Stays",
-          label: "Chapter 6 · The end is a beginning",
-          scene: "ending",
-          caption: "Curiosity keeps growing",
-          robot: "",
-          story: "Leo waved goodbye as each explorer sent one last twinkle. Their missions had different endings, but their discoveries stayed with us. Leo smiled: every machine leaves knowledge behind—and every question can begin a new adventure.",
-          name: "the four explorers",
-          purpose: "explore, observe, or listen, then share what they learned with Earth",
-          achievement: "Together, these explorers helped us learn about Mars and showed that human-made machines can travel into interstellar space.",
-          voice: "Our journeys may be different, but every discovery belongs to everyone.",
-          fact: "When a mission shares what it learns, that knowledge can inspire the next explorer."
+          scene: "home",
+          caption: "Home · under the same stars",
+          machine: "the explorers",
+          machineClass: "machine-probe",
+          science: "The explorers’ missions have ended in different ways. Their discoveries still help us learn about Mars and space.",
+          dialogue: [
+            ["Leo", "leo", "Your missions ended. Does that mean your stories are over?"],
+            ["Opportunity", "machine", "Not while someone remembers what we discovered."],
+            ["InSight", "machine", "Every signal becomes a question."],
+            ["Sojourner", "machine", "Every wheel leaves a path."],
+            ["Voyager 1", "machine", "And every discovery can begin a new adventure."],
+            ["Leo", "leo", "Then I will tell your story."]
+          ]
         }
       ];
 
       const storyPage = document.getElementById("story-page");
       const sourcesPage = document.getElementById("sources-page");
-      const title = document.getElementById("chapter-title");
-      const scene = document.getElementById("scene");
-      const leo = document.getElementById("leo");
-      const robot = document.getElementById("robot");
-      const chapterCount = document.getElementById("chapter-count");
-      const spine = document.getElementById("book-spine");
-      const fill = document.getElementById("spine-fill");
-      const back = document.getElementById("back-button");
-      const next = document.getElementById("next-button");
-      const sourcesButton = document.getElementById("sources-button");
+      const stage = document.getElementById("stage");
+      const machine = document.getElementById("machine");
+      const machineShell = machine.querySelector(".machine-shell");
+      const speechArea = document.getElementById("speech-area");
+      const continueButton = document.getElementById("continue-button");
+      const backButton = document.getElementById("back-button");
+      const scienceButton = document.getElementById("science-button");
+      const clue = document.getElementById("science-clue");
       const announcer = document.getElementById("announcer");
-      let current = 0;
-      let showingSources = false;
+      let chapterIndex = 0;
+      let lineIndex = 0;
+      let visibleLines = [];
+      let typingTimer = 0;
+      let sourceView = false;
+      let transitionTimer = 0;
 
-      function renderChapter(focusHeading = false) {
-        const chapter = chapters[current];
-        document.getElementById("page-label").textContent = chapter.label;
-        title.textContent = chapter.title;
-        document.getElementById("chapter-story").textContent = chapter.story;
-        scene.dataset.scene = chapter.scene;
-        scene.setAttribute("aria-label", chapter.caption);
-        document.getElementById("scene-caption").textContent = chapter.caption;
-        robot.className = `robot ${chapter.robot || ""}`;
-        leo.style.display = current === 0 || current === chapters.length - 1 ? "" : "none";
-        scene.classList.toggle("leo-helmet", Boolean(chapter.helmet));
-        if (chapter.helmet) {
-          const helmet = document.createElement("span");
-          helmet.className = "space-helmet";
-          helmet.setAttribute("aria-hidden", "true");
-          leo.append(helmet);
+      function renderDialogue(shouldType = true) {
+        const chapter = chapters[chapterIndex];
+        const animateTyping = shouldType && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        visibleLines = chapter.dialogue
+          .slice(Math.max(0, lineIndex - 2), lineIndex + 1)
+          .map(([speaker, role, text], index, lines) => ({
+            speaker,
+            role,
+            text,
+            typing: animateTyping && index === lines.length - 1
+          }));
+        const currentLine = visibleLines[visibleLines.length - 1];
+        speechArea.replaceChildren();
+
+        visibleLines.forEach((entry, index) => {
+          const bubble = document.createElement("div");
+          bubble.className = `speech-bubble ${entry.role === "leo" ? "leo-line" : "machine-line"}${index === visibleLines.length - 1 ? " active" : ""}`;
+          const label = document.createElement("span");
+          label.className = "speaker-name";
+          label.textContent = `${entry.speaker}:`;
+          const words = document.createElement("span");
+          words.className = entry.typing ? "bubble-text typing" : "bubble-text";
+          if (entry.typing) {
+            words.setAttribute("aria-label", "Typing");
+            for (let dot = 0; dot < 3; dot += 1) {
+              const typingDot = document.createElement("i");
+              typingDot.className = "typing-dot";
+              typingDot.setAttribute("aria-hidden", "true");
+              words.append(typingDot);
+            }
+          } else {
+            words.textContent = `“${entry.text}”`;
+          }
+          bubble.append(label, words);
+          speechArea.append(bubble);
+        });
+
+        stage.dataset.speaker = "quiet";
+        void stage.offsetWidth;
+        stage.dataset.speaker = currentLine.role;
+        if (currentLine.role === "machine" || currentLine.role === "radio") {
+          const isRadio = currentLine.role === "radio";
+          machine.setAttribute("aria-label", currentLine.speaker);
+          document.getElementById("radio-copy").hidden = !isRadio;
+          machine.className = `machine ${isRadio ? "machine-radio" : chapter.machineClass || "machine-rover"}`;
+          machineShell.setAttribute("aria-label", currentLine.speaker);
         } else {
-          leo.querySelector(".space-helmet")?.remove();
+          document.getElementById("radio-copy").hidden = true;
+        }
+        announcer.textContent = `${currentLine.speaker} says: ${currentLine.text}`;
+
+        window.clearTimeout(typingTimer);
+        if (animateTyping) {
+          continueButton.disabled = true;
+          typingTimer = window.setTimeout(() => {
+            renderDialogue(false);
+            continueButton.disabled = false;
+          }, 520);
+        } else {
+          continueButton.disabled = false;
         }
 
-        const notes = document.getElementById("machine-notes");
-        notes.replaceChildren();
-        const addNote = (className, label, content) => {
-          const note = document.createElement("div");
-          note.className = `note ${className}`;
-          const strong = document.createElement("strong");
-          strong.textContent = `${label} `;
-          note.append(strong, document.createTextNode(content));
-          notes.append(note);
-        };
-        addNote("", `Meet ${chapter.name}. Designed to`, `${chapter.purpose.charAt(0).toLowerCase()}${chapter.purpose.slice(1)}.`);
-        addNote("", "What it did:", chapter.achievement);
-        addNote("note-dialogue", "Creative storytelling ·", `“${chapter.voice}”`);
-        addNote("note-fact", "Did you know?", chapter.fact);
-
-        chapterCount.replaceChildren();
-        chapterCount.append(document.createTextNode("Chapter "));
-        const chapterNumber = document.createElement("strong");
-        chapterNumber.textContent = String(current + 1);
-        chapterCount.append(chapterNumber, document.createTextNode(` of ${chapters.length}`));
-        spine.setAttribute("aria-valuenow", String(current + 1));
-        fill.style.width = `${((current + 1) / chapters.length) * 100}%`;
-        back.disabled = current === 0;
-        next.replaceChildren(document.createTextNode(current === chapters.length - 1 ? "Restart Story " : "Next Chapter "));
-        const nextArrow = document.createElement("span");
-        nextArrow.setAttribute("aria-hidden", "true");
-        nextArrow.textContent = current === chapters.length - 1 ? "↻" : "→";
-        next.append(nextArrow);
-        next.classList.toggle("button-restart", current === chapters.length - 1);
-        next.classList.toggle("button-next", current !== chapters.length - 1);
-        announcer.textContent = `${chapter.label}. ${chapter.title}`;
-        if (focusHeading) title.focus();
+        const isLastLine = lineIndex === chapter.dialogue.length - 1;
+        continueButton.replaceChildren(document.createTextNode(isLastLine
+          ? chapterIndex === chapters.length - 1 ? "Read again " : "Turn the page "
+          : "Continue "));
+        const arrow = document.createElement("span");
+        arrow.setAttribute("aria-hidden", "true");
+        arrow.textContent = isLastLine ? chapterIndex === chapters.length - 1 ? "↻" : "✦" : "→";
+        continueButton.append(arrow);
       }
 
-      function showStory(focus = false) {
-        showingSources = false;
-        sourcesPage.hidden = true;
-        storyPage.hidden = false;
-        sourcesButton.setAttribute("aria-pressed", "false");
-        renderChapter(focus);
+      function renderChapter({ focus = false, animate = false, lastLine = false } = {}) {
+        const chapter = chapters[chapterIndex];
+        lineIndex = lastLine ? chapter.dialogue.length - 1 : 0;
+        visibleLines = [];
+        window.clearTimeout(typingTimer);
+        window.clearTimeout(transitionTimer);
+        continueButton.disabled = false;
+        stage.dataset.scene = chapter.scene;
+        stage.setAttribute("aria-label", `${chapter.caption}. Leo meets ${chapter.machine || "a mysterious radio"}.`);
+        document.getElementById("stage-caption").textContent = chapter.caption;
+        document.getElementById("scene-count").replaceChildren(
+          document.createTextNode("Scene "),
+          Object.assign(document.createElement("strong"), { textContent: String(chapterIndex + 1) }),
+          document.createTextNode(` of ${chapters.length}`)
+        );
+        document.getElementById("friends").hidden = chapter.scene !== "home";
+        document.getElementById("science-text").textContent = chapter.science;
+        clue.hidden = true;
+        scienceButton.setAttribute("aria-expanded", "false");
+        scienceButton.hidden = false;
+        backButton.disabled = chapterIndex === 0;
+
+        machine.className = `machine ${chapter.machineClass || "machine-radio"}`;
+        machine.hidden = chapter.scene === "home";
+        document.getElementById("radio-copy").hidden = true;
+        document.getElementById("rocket").hidden = chapter.scene !== "bedroom" && chapter.scene !== "mars";
+        document.getElementById("home-window").hidden = chapter.scene !== "home";
+        document.querySelector(".bed").hidden = chapter.scene !== "bedroom";
+        document.querySelector(".window").hidden = chapter.scene !== "bedroom";
+        document.getElementById("dune").hidden = chapter.scene === "bedroom" || chapter.scene === "home";
+        document.getElementById("leo").hidden = false;
+
+        if (animate) {
+          stage.classList.remove("page-turn");
+          void stage.offsetWidth;
+          stage.classList.add("page-turn");
+          transitionTimer = window.setTimeout(() => stage.classList.remove("page-turn"), 560);
+        }
+        renderDialogue(!lastLine);
+        if (focus) continueButton.focus();
       }
 
-      function showSources() {
-        showingSources = true;
-        storyPage.hidden = true;
-        sourcesPage.hidden = false;
-        sourcesButton.setAttribute("aria-pressed", "true");
-        document.getElementById("sources-title").focus();
-        announcer.textContent = "Sources. Leo’s space bookshelf.";
+      function goToChapter(nextIndex, { lastLine = false } = {}) {
+        if (nextIndex < 0 || nextIndex >= chapters.length) return;
+        chapterIndex = nextIndex;
+        renderChapter({ focus: true, animate: true, lastLine });
       }
 
-      next.addEventListener("click", () => {
-        if (current === chapters.length - 1) {
-          current = 0;
-          renderChapter(true);
+      continueButton.addEventListener("click", () => {
+        if (continueButton.disabled) return;
+        const chapter = chapters[chapterIndex];
+        if (lineIndex < chapter.dialogue.length - 1) {
+          lineIndex += 1;
+          renderDialogue(true);
           return;
         }
-        current += 1;
-        renderChapter(true);
+        if (chapterIndex < chapters.length - 1) goToChapter(chapterIndex + 1);
+        else {
+          chapterIndex = 0;
+          renderChapter({ focus: true, animate: true });
+        }
       });
-      back.addEventListener("click", () => {
-        if (current === 0) return;
-        current -= 1;
-        renderChapter(true);
+
+      backButton.addEventListener("click", () => {
+        if (lineIndex > 0) {
+          lineIndex -= 1;
+          renderDialogue(false);
+          continueButton.focus();
+        } else if (chapterIndex > 0) {
+          goToChapter(chapterIndex - 1, { lastLine: true });
+        }
       });
-      sourcesButton.addEventListener("click", () => showingSources ? showStory(true) : showSources());
-      document.getElementById("sources-back").addEventListener("click", () => showStory(true));
-      document.getElementById("sources-restart").addEventListener("click", () => {
-        current = 0;
-        showStory(true);
+
+      scienceButton.addEventListener("click", () => {
+        const opening = clue.hidden;
+        clue.hidden = !opening;
+        scienceButton.setAttribute("aria-expanded", String(opening));
+      });
+      document.getElementById("restart-button").addEventListener("click", () => {
+        chapterIndex = 0;
+        lineIndex = 0;
+        renderChapter({ focus: true, animate: true });
       });
       document.getElementById("home-link").addEventListener("click", (event) => {
         event.preventDefault();
-        current = 0;
-        showStory(true);
+        chapterIndex = 0;
+        lineIndex = 0;
+        sourceView = false;
+        document.getElementById("sources-toggle").setAttribute("aria-pressed", "false");
+        sourcesPage.hidden = true;
+        storyPage.hidden = false;
+        renderChapter({ focus: true, animate: true });
       });
+      document.getElementById("sources-toggle").addEventListener("click", () => {
+        sourceView = !sourceView;
+        storyPage.hidden = sourceView;
+        sourcesPage.hidden = !sourceView;
+        document.getElementById("sources-toggle").setAttribute("aria-pressed", String(sourceView));
+        if (sourceView) document.getElementById("sources-title").focus();
+        else continueButton.focus();
+      });
+      document.getElementById("sources-back").addEventListener("click", () => {
+        sourceView = false;
+        document.getElementById("sources-toggle").setAttribute("aria-pressed", "false");
+        sourcesPage.hidden = true;
+        storyPage.hidden = false;
+        continueButton.focus();
+      });
+      document.getElementById("sources-restart").addEventListener("click", () => {
+        sourceView = false;
+        document.getElementById("sources-toggle").setAttribute("aria-pressed", "false");
+        sourcesPage.hidden = true;
+        storyPage.hidden = false;
+        chapterIndex = 0;
+        lineIndex = 0;
+        renderChapter({ focus: true, animate: true });
+      });
+
       renderChapter();
     })();
   </script>
