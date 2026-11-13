@@ -3,1250 +3,773 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#080d1a">
-  <meta name="description" content="Meet the robotic explorers that changed what we know about other worlds. An interactive storybook from NASA Space Apps Challenge.">
-  <title>The Machines That Remain — An Interactive Space Storybook</title>
+  <meta name="theme-color" content="#fff5d9">
+  <meta name="description" content="Join Leo on a gentle storybook adventure to meet four NASA space explorers.">
+  <title>Leo and the Lost Space Machines</title>
   <style>
     :root {
-      color-scheme: dark;
-      --space: #080d1a;
-      --space-soft: #0e1626;
-      --panel: #111b2d;
-      --panel-light: #172337;
-      --ink: #f5f0e8;
-      --muted: #aab4c4;
-      --dim: #74839b;
-      --line: rgba(195, 211, 231, .16);
-      --orange: #ff916b;
-      --orange-light: #ffbd98;
-      --cyan: #76e4e6;
-      --silver: #d3deea;
-      --gold: #f4d18c;
+      color-scheme: light;
+      --ink: #263353;
+      --muted: #566482;
+      --paper: #fff8e6;
+      --blue: #4667d5;
+      --blue-dark: #304dad;
+      --pink: #f27b91;
+      --yellow: #ffd166;
+      --mint: #73cfb2;
+      --lilac: #ac9af0;
       --serif: Georgia, "Times New Roman", serif;
       --sans: "Trebuchet MS", Arial, sans-serif;
-      --content: 1160px;
     }
 
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+    html { min-width: 320px; min-height: 100%; background: var(--paper); }
     body {
+      min-width: 320px;
+      min-height: 100svh;
       margin: 0;
-      background:
-        radial-gradient(ellipse at 79% 9%, rgba(32, 61, 93, .26), transparent 34rem),
-        radial-gradient(ellipse at 9% 41%, rgba(29, 47, 77, .16), transparent 36rem),
-        var(--space);
-      color: var(--ink);
-      font: 16px/1.65 var(--sans);
       overflow-x: hidden;
+      background:
+        radial-gradient(ellipse at 10% 12%, rgba(255,255,255,.82), transparent 34%),
+        radial-gradient(ellipse at 88% 78%, rgba(255,225,172,.38), transparent 30%),
+        #fff5dc;
+      color: var(--ink);
+      font: 18px/1.55 var(--sans);
     }
-    body::before {
+    button, a { font: inherit; -webkit-tap-highlight-color: transparent; }
+    button:focus-visible, a:focus-visible { outline: 4px solid #243b94; outline-offset: 4px; }
+    .book {
+      position: relative;
+      display: flex;
+      min-height: 100svh;
+      flex-direction: column;
+      isolation: isolate;
+    }
+    .sky-dots {
       position: fixed;
       z-index: -1;
       inset: 0;
-      content: "";
       pointer-events: none;
-      opacity: .46;
       background-image:
-        radial-gradient(1px 1px at 11% 18%, #fff 50%, transparent 100%),
-        radial-gradient(1px 1px at 78% 12%, #c4deff 50%, transparent 100%),
-        radial-gradient(1px 1px at 54% 37%, #fff 50%, transparent 100%),
-        radial-gradient(1.5px 1.5px at 91% 61%, #fff 50%, transparent 100%),
-        radial-gradient(1px 1px at 22% 76%, #a9cbef 50%, transparent 100%),
-        radial-gradient(1px 1px at 67% 88%, #fff 50%, transparent 100%),
-        radial-gradient(1px 1px at 35% 9%, #fff 50%, transparent 100%),
-        radial-gradient(1px 1px at 87% 35%, #b4d7f0 50%, transparent 100%);
-      background-size: 390px 320px;
-      animation: star-drift 70s linear infinite;
+        radial-gradient(circle, rgba(91,119,189,.35) 1.3px, transparent 1.8px),
+        radial-gradient(circle, rgba(255,172,111,.5) 1.6px, transparent 2px),
+        radial-gradient(circle, rgba(151,133,217,.35) 1px, transparent 1.5px);
+      background-position: 25px 32px, 123px 104px, 230px 40px;
+      background-size: 198px 181px, 247px 226px, 163px 193px;
+      animation: twinkle 5s ease-in-out infinite alternate;
     }
-    a { color: inherit; }
-    button { font: inherit; }
-    button, a { -webkit-tap-highlight-color: transparent; }
-    button:focus-visible, a:focus-visible, summary:focus-visible {
-      outline: 3px solid var(--cyan);
-      outline-offset: 4px;
-    }
-    ::selection { color: var(--space); background: var(--cyan); }
-    .wrap { width: min(var(--content), calc(100% - 48px)); margin-inline: auto; }
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--cyan);
-      font-size: .71rem;
-      font-weight: 700;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-    }
-    .eyebrow::before { width: 23px; height: 1px; content: ""; background: currentColor; }
-    .site-header {
-      position: absolute;
-      z-index: 5;
-      top: 0;
-      left: 0;
-      width: 100%;
-      border-bottom: 1px solid rgba(195, 211, 231, .1);
-    }
-    .nav {
+    .topbar {
+      z-index: 2;
       display: flex;
       min-height: 76px;
       align-items: center;
       justify-content: space-between;
-      gap: 24px;
+      gap: 14px;
+      width: min(1050px, calc(100% - 44px));
+      margin: 0 auto;
+      border-bottom: 1px solid rgba(47,64,101,.12);
     }
-    .brand {
+    .wordmark {
       display: inline-flex;
       align-items: center;
-      gap: 12px;
+      gap: 9px;
       color: var(--ink);
-      font-size: .78rem;
-      font-weight: 700;
-      letter-spacing: .13em;
+      font-size: .79rem;
+      font-weight: 800;
+      letter-spacing: .025em;
       text-decoration: none;
+    }
+    .wordmark-star { color: #ee9070; font-size: 1.45rem; line-height: 1; }
+    .top-actions { display: flex; align-items: center; gap: 14px; }
+    .chapter-count { color: var(--muted); font-size: .82rem; font-weight: 700; white-space: nowrap; }
+    .chapter-count strong { color: var(--blue-dark); }
+    .sources-link {
+      min-height: 40px;
+      padding: 6px 14px;
+      border: 2px solid rgba(57,78,139,.2);
+      border-radius: 999px;
+      background: rgba(255,255,255,.58);
+      color: var(--blue-dark);
+      cursor: pointer;
+      font-size: .8rem;
+      font-weight: 800;
+      transition: background .2s ease, transform .2s ease;
+    }
+    .sources-link:hover { transform: translateY(-2px); background: white; }
+    .story-page {
+      display: flex;
+      width: 100%;
+      flex: 1;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(24px, 4vh, 42px) 22px 26px;
+      animation: page-in .45s cubic-bezier(.2,.72,.28,1) both;
+    }
+    .story-page[hidden] { display: none; }
+    .page-inner {
+      display: grid;
+      width: min(1050px, 100%);
+      grid-template-columns: minmax(0, 1.04fr) minmax(310px, .96fr);
+      align-items: center;
+      gap: clamp(27px, 6vw, 78px);
+      margin: auto;
+    }
+    .story-copy { max-width: 505px; }
+    .page-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border: 1px solid rgba(62,85,157,.14);
+      border-radius: 999px;
+      background: rgba(255,255,255,.6);
+      color: #50628e;
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .055em;
       text-transform: uppercase;
     }
-    .brand-mark {
-      position: relative;
-      width: 29px;
-      height: 29px;
-      border: 1px solid rgba(118, 228, 230, .7);
-      border-radius: 50%;
-    }
-    .brand-mark::before, .brand-mark::after {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 15px;
-      height: 5px;
-      border: 1px solid var(--cyan);
-      border-radius: 50%;
-      content: "";
-      transform: translate(-50%, -50%) rotate(-34deg);
-    }
-    .brand-mark::after {
-      width: 4px;
-      height: 4px;
-      border: 0;
-      background: var(--orange);
-    }
-    .nav-links { display: flex; align-items: center; gap: clamp(16px, 3vw, 36px); }
-    .nav-links a {
-      color: #c3ccda;
-      font-size: .76rem;
-      text-decoration: none;
-      transition: color .2s ease;
-    }
-    .nav-links a:hover { color: var(--cyan); }
-    .nav-progress { color: var(--muted); font-size: .7rem; white-space: nowrap; }
-    .nav-progress strong { color: var(--cyan); font-weight: 700; }
-
-    .hero {
-      position: relative;
-      display: grid;
-      min-height: min(840px, 100svh);
-      align-items: center;
-      overflow: hidden;
-      padding: 120px 0 70px;
-      isolation: isolate;
-    }
-    .hero::after {
-      position: absolute;
-      z-index: -1;
-      right: -15%;
-      bottom: -34%;
-      width: min(75vw, 950px);
-      aspect-ratio: 1;
-      border: 1px solid rgba(118, 228, 230, .13);
-      border-radius: 50%;
-      box-shadow: 0 0 0 36px rgba(118, 228, 230, .025), 0 0 0 90px rgba(118, 228, 230, .018);
-      content: "";
-    }
-    .hero-content { position: relative; z-index: 1; max-width: 720px; }
-    .hero h1 {
-      max-width: 810px;
-      margin: 23px 0 18px;
-      font: 400 clamp(3.2rem, 8.6vw, 7.6rem)/.91 var(--serif);
-      letter-spacing: -.065em;
+    .page-label::before { width: 8px; height: 8px; border-radius: 50%; background: var(--pink); content: ""; }
+    h1 {
+      margin: 18px 0 13px;
+      font: 700 clamp(2.6rem, 5.4vw, 4.65rem)/1.02 var(--serif);
+      letter-spacing: -.055em;
       text-wrap: balance;
     }
-    .hero h1 span { color: var(--orange-light); font-style: italic; }
-    .hero-subtitle { max-width: 530px; margin: 0; color: #c0cad8; font: 400 clamp(1.05rem, 2vw, 1.35rem)/1.55 var(--serif); }
-    .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 17px; margin-top: 33px; }
+    .chapter-story { margin: 0; color: #414f70; font-size: clamp(1.05rem, 1.5vw, 1.22rem); line-height: 1.62; }
+    .machine-notes {
+      display: grid;
+      gap: 8px;
+      margin-top: 21px;
+    }
+    .note {
+      padding: 9px 12px;
+      border-left: 4px solid var(--mint);
+      border-radius: 0 9px 9px 0;
+      background: rgba(255,255,255,.67);
+      color: #44516c;
+      font-size: .83rem;
+      line-height: 1.48;
+    }
+    .note strong { color: #303e61; }
+    .note-dialogue { border-color: var(--pink); background: #fff0ee; }
+    .note-dialogue strong { color: #aa435d; }
+    .note-fact { border-color: #efbd43; background: #fff6d8; }
+    .scene-wrap {
+      position: relative;
+      display: grid;
+      min-height: clamp(280px, 42vw, 440px);
+      place-items: center;
+      overflow: hidden;
+      border: 3px solid rgba(255,255,255,.84);
+      border-radius: 43% 43% 36% 36% / 39% 39% 30% 30%;
+      background: linear-gradient(180deg, #a9ddf2 0%, #d2eafa 57%, #f8dca9 100%);
+      box-shadow: 0 17px 40px rgba(67,82,125,.13), inset 0 0 0 1px rgba(64,85,132,.12);
+      isolation: isolate;
+    }
+    .scene-wrap::before {
+      position: absolute;
+      z-index: -1;
+      top: 13%;
+      right: 12%;
+      width: 51px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: #fff4bd;
+      box-shadow: 0 0 0 11px rgba(255,244,189,.2), 0 0 32px rgba(255,230,151,.75);
+      content: "";
+    }
+    .scene-wrap::after {
+      position: absolute;
+      z-index: -1;
+      right: -8%;
+      bottom: 0;
+      left: -8%;
+      height: 34%;
+      border-radius: 50% 50% 0 0;
+      background: linear-gradient(180deg, #c8d99a, #9ac486);
+      content: "";
+    }
+    .scene-wrap[data-scene="message"] { background: linear-gradient(180deg,#8fc8ec,#dbedfa 62%,#ffe4b2); }
+    .scene-wrap[data-scene="sojourner"], .scene-wrap[data-scene="opportunity"] { background: linear-gradient(180deg,#b2d8ed,#f1d4b0 69%,#d99571); }
+    .scene-wrap[data-scene="insight"] { background: linear-gradient(180deg,#b4dcf0,#e8d4c5 68%,#ca9377); }
+    .scene-wrap[data-scene="voyager"] { background: linear-gradient(180deg,#202c61,#4d5e9d 58%,#b48fbe); }
+    .scene-wrap[data-scene="ending"] { background: linear-gradient(180deg,#a1d9ee,#d7e8f4 58%,#f6d7a4); }
+    .scene-wrap[data-scene="voyager"]::after { background: linear-gradient(180deg,#505e91,#343e72); }
+    .scene-wrap[data-scene="ending"]::after { background: linear-gradient(180deg,#f3bd82,#dc8e83); }
+    .cloud {
+      position: absolute;
+      top: 19%;
+      left: 10%;
+      width: 70px;
+      height: 22px;
+      border-radius: 40px;
+      background: rgba(255,255,255,.78);
+      animation: float 6s ease-in-out infinite;
+    }
+    .cloud::before, .cloud::after {
+      position: absolute;
+      bottom: 7px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: inherit;
+      content: "";
+    }
+    .cloud::before { left: 10px; }
+    .cloud::after { right: 7px; width: 25px; height: 25px; }
+    .cloud-two { top: 31%; left: auto; right: 8%; transform: scale(.64); animation-delay: -2s; }
+    .hill {
+      position: absolute;
+      z-index: -1;
+      right: 28%;
+      bottom: 17%;
+      width: 67%;
+      height: 21%;
+      border-radius: 50%;
+      background: rgba(195,133,105,.65);
+      transform: rotate(-8deg);
+    }
+    .scene-caption {
+      position: absolute;
+      right: 13px;
+      bottom: 11px;
+      color: rgba(51,62,88,.78);
+      font-size: .64rem;
+      font-weight: 800;
+      letter-spacing: .035em;
+    }
+    [data-scene="voyager"] .scene-caption { color: #fff4d9; }
+    .leo {
+      position: absolute;
+      z-index: 1;
+      bottom: 20%;
+      left: 21%;
+      width: 82px;
+      height: 122px;
+      animation: float 4s ease-in-out infinite;
+    }
+    .leo-head {
+      position: absolute;
+      top: 0;
+      left: 21px;
+      width: 49px;
+      height: 50px;
+      border-radius: 48% 48% 44% 44%;
+      background: #f2b987;
+      box-shadow: inset -4px -3px rgba(181,104,75,.12);
+    }
+    .leo-hair {
+      position: absolute;
+      z-index: 1;
+      top: -4px;
+      left: 19px;
+      width: 49px;
+      height: 23px;
+      border-radius: 60% 48% 12% 18%;
+      background: #67434a;
+      transform: rotate(-4deg);
+    }
+    .leo-hair::before, .leo-hair::after {
+      position: absolute;
+      bottom: -7px;
+      width: 16px;
+      height: 20px;
+      border-radius: 2px 3px 12px 12px;
+      background: #67434a;
+      content: "";
+    }
+    .leo-hair::before { left: 2px; transform: rotate(12deg); }
+    .leo-hair::after { left: 17px; transform: rotate(-8deg); }
+    .leo-eye { position: absolute; z-index: 2; top: 23px; left: 35px; width: 5px; height: 6px; border-radius: 50%; background: #32334c; box-shadow: 20px 0 #32334c; }
+    .leo-smile { position: absolute; z-index: 2; top: 34px; left: 44px; width: 12px; height: 6px; border-bottom: 2px solid #a85854; border-radius: 50%; }
+    .leo-body { position: absolute; top: 44px; left: 16px; width: 61px; height: 58px; border: 3px solid rgba(255,255,255,.8); border-radius: 21px 21px 12px 12px; background: #6381e8; }
+    .leo-body::after { position: absolute; top: 8px; left: 10px; width: 11px; height: 9px; border-radius: 3px; background: #ffd66f; box-shadow: 20px 1px 0 -3px #ffd6b4; content: ""; }
+    .leo-arm { position: absolute; z-index: 2; top: 53px; width: 13px; height: 39px; border-radius: 8px; background: #f2b987; }
+    .leo-arm.left { left: 7px; transform: rotate(19deg); }
+    .leo-arm.right { right: 0; transform: rotate(-27deg); }
+    .leo-leg { position: absolute; top: 96px; left: 27px; width: 14px; height: 25px; border-radius: 0 0 6px 6px; background: #404b72; box-shadow: 25px 0 #404b72; }
+    .leo-shoe { position: absolute; top: 114px; left: 19px; width: 24px; height: 9px; border-radius: 8px 3px 5px 5px; background: #f27b91; box-shadow: 25px 0 #f27b91; }
+    .space-helmet {
+      position: absolute;
+      z-index: 3;
+      top: -9px;
+      left: 9px;
+      width: 72px;
+      height: 70px;
+      border: 3px solid rgba(255,255,255,.88);
+      border-radius: 50%;
+      background: rgba(198,235,255,.16);
+      box-shadow: inset -6px -4px rgba(61,113,168,.12);
+    }
+    .robot {
+      position: absolute;
+      z-index: 1;
+      right: 22%;
+      bottom: 23%;
+      width: 104px;
+      height: 91px;
+      animation: float 4.6s ease-in-out infinite;
+    }
+    .robot-body {
+      position: absolute;
+      top: 16px;
+      left: 24px;
+      width: 61px;
+      height: 48px;
+      border: 3px solid rgba(255,255,255,.7);
+      border-radius: 13px;
+      background: linear-gradient(145deg,#e7b36e,#d98556);
+      box-shadow: inset -7px -6px rgba(103,64,60,.13);
+    }
+    .robot-body::before { position: absolute; top: -20px; left: 23px; width: 5px; height: 18px; background: #60698c; content: ""; }
+    .robot-body::after { position: absolute; top: -25px; left: 19px; width: 13px; height: 13px; border-radius: 50%; background: #ffce67; box-shadow: 0 0 13px rgba(255,208,99,.8); content: ""; }
+    .robot-eye { position: absolute; z-index: 1; top: 16px; left: 13px; width: 7px; height: 8px; border-radius: 50%; background: #34425c; box-shadow: 20px 0 #34425c; }
+    .robot-smile { position: absolute; z-index: 1; top: 30px; left: 18px; width: 14px; height: 6px; border-bottom: 2px solid #9a5147; border-radius: 50%; }
+    .robot-wheel { position: absolute; top: 58px; left: 18px; width: 22px; height: 22px; border: 4px solid #45506a; border-radius: 50%; background: #d3dddb; box-shadow: 45px 0 0 -4px #d3dddb, 45px 0 0 0 #45506a; }
+    .robot-panel { position: absolute; top: 30px; right: 12px; width: 16px; height: 12px; border: 2px solid #6475ac; background: #9dcbe2; }
+    .robot-arm { position: absolute; top: 39px; left: 4px; width: 23px; height: 4px; border-radius: 3px; background: #67728d; transform: rotate(-28deg); }
+    .antenna {
+      position: absolute;
+      top: -21px;
+      right: 9px;
+      width: 29px;
+      height: 24px;
+      border-top: 2px solid #596584;
+      border-radius: 50%;
+      transform: rotate(-22deg);
+    }
+    .robot-seismo .robot-body { width: 69px; height: 53px; border-radius: 22px 22px 10px 10px; background: linear-gradient(145deg,#d9e3da,#8ca4a7); }
+    .robot-seismo .robot-wheel { display: none; }
+    .robot-seismo .robot-body::after { background: #eea279; }
+    .robot-space { right: 28%; bottom: 35%; transform: scale(.92); }
+    .robot-voyager .robot-body { border-radius: 50%; background: linear-gradient(145deg,#e5ce94,#a98c65); }
+    .robot-voyager .robot-wheel, .robot-voyager .robot-eye, .robot-voyager .robot-smile, .robot-voyager .robot-arm { display: none; }
+    .robot-voyager .robot-body::before { top: 19px; left: -21px; width: 22px; height: 3px; transform: rotate(-22deg); }
+    .robot-voyager .robot-body::after { top: 12px; left: 20px; width: 18px; height: 18px; border: 2px solid #f5e4ad; background: transparent; box-shadow: none; }
+    .robot-voyager .antenna { top: 43px; right: -18px; width: 25px; }
+    .record-star {
+      position: absolute;
+      z-index: 1;
+      top: 30%;
+      right: 20%;
+      width: 35px;
+      height: 35px;
+      border: 2px solid #ffdc84;
+      border-radius: 50%;
+      background: repeating-radial-gradient(circle,transparent 0 4px,rgba(255,235,178,.45) 5px 6px);
+      box-shadow: 0 0 0 8px rgba(255,230,150,.08), 0 0 22px rgba(255,230,150,.3);
+    }
+    .stars-scene {
+      position: absolute;
+      top: 17%;
+      left: 16%;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 48px 45px #fff, 107px -8px #fbe0a8, 193px 39px white, 257px 7px #d8d9ff, 297px 89px white;
+      animation: twinkle 3s ease-in-out infinite alternate;
+    }
+    .message-wave {
+      position: absolute;
+      z-index: 2;
+      top: 31%;
+      right: 29%;
+      width: 67px;
+      height: 35px;
+      border-top: 4px dotted #f28178;
+      border-radius: 50%;
+      transform: rotate(-16deg);
+      animation: signal 1.8s ease-in-out infinite alternate;
+    }
+    .message-wave::before, .message-wave::after {
+      position: absolute;
+      top: 9px;
+      left: 7px;
+      width: 50px;
+      height: 22px;
+      border-top: 3px dotted #f28178;
+      border-radius: 50%;
+      content: "";
+    }
+    .message-wave::after { top: 17px; left: 17px; width: 30px; }
+    .ending-garden { position: absolute; z-index: 1; right: 10%; bottom: 20%; left: 11%; height: 40%; }
+    .flower { position: absolute; bottom: 0; width: 21px; height: 56px; border-left: 3px solid #527f60; }
+    .flower::before { position: absolute; top: -9px; left: -10px; width: 18px; height: 18px; border-radius: 50%; background: #ffd05d; box-shadow: 0 -9px #f48a93, 8px -3px #f48a93, -8px -3px #f48a93; content: ""; }
+    .flower::after { position: absolute; top: 23px; left: 1px; width: 14px; height: 8px; border-radius: 0 100% 0 100%; background: #75b887; content: ""; transform: rotate(-30deg); }
+    .flower-one { left: 11%; height: 62px; }
+    .flower-two { left: 34%; height: 43px; transform: scale(.78); }
+    .flower-three { right: 10%; height: 67px; transform: scale(1.1); }
+    .controls {
+      display: flex;
+      width: min(1050px, 100%);
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin: clamp(21px, 4vh, 34px) auto 0;
+    }
     .button {
       display: inline-flex;
-      min-height: 48px;
+      min-height: 54px;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      padding: 0 20px;
-      border: 1px solid transparent;
-      border-radius: 3px;
-      cursor: pointer;
-      font-size: .78rem;
-      font-weight: 700;
-      letter-spacing: .035em;
-      text-decoration: none;
-      transition: transform .2s ease, background .2s ease, border-color .2s ease, color .2s ease;
-    }
-    .button:hover { transform: translateY(-2px); }
-    .button-primary { background: var(--orange); color: #21130f; }
-    .button-primary:hover { background: var(--orange-light); }
-    .button-quiet { border-color: var(--line); background: rgba(12, 19, 32, .5); color: var(--ink); }
-    .button-quiet:hover { border-color: rgba(118, 228, 230, .6); color: var(--cyan); }
-    .button-arrow { font-size: 1.1rem; line-height: 1; }
-    .hero-aside {
-      position: absolute;
-      right: max(24px, calc((100vw - var(--content)) / 2));
-      bottom: 112px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: var(--muted);
-      font-size: .68rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      writing-mode: vertical-rl;
-    }
-    .hero-aside::after { width: 1px; height: 44px; background: var(--orange); content: ""; }
-    .orbital-illustration {
-      position: absolute;
-      z-index: 0;
-      top: 19%;
-      right: 3%;
-      width: min(39vw, 475px);
-      aspect-ratio: 1;
-      pointer-events: none;
-      opacity: .88;
-    }
-    .orbit-ring {
-      position: absolute;
-      inset: 14%;
-      border: 1px solid rgba(163, 193, 224, .27);
-      border-radius: 50%;
-      transform: rotate(-24deg) scaleY(.42);
-    }
-    .orbit-ring.two { inset: 4%; transform: rotate(38deg) scaleY(.52); border-color: rgba(118, 228, 230, .2); }
-    .orbit-ring.three { inset: 22%; transform: rotate(68deg) scaleY(.43); border-color: rgba(255, 145, 107, .25); }
-    .planet {
-      position: absolute;
-      top: 25%;
-      left: 27%;
-      width: 45%;
-      aspect-ratio: 1;
-      overflow: hidden;
-      border-radius: 50%;
-      background:
-        radial-gradient(ellipse at 33% 30%, rgba(255, 213, 164, .44), transparent 6%),
-        radial-gradient(ellipse at 67% 45%, rgba(82, 27, 24, .38) 0 8%, transparent 9%),
-        radial-gradient(ellipse at 36% 67%, rgba(87, 34, 27, .42) 0 11%, transparent 12%),
-        radial-gradient(circle at 34% 30%, #e8a17b 0, #bd654d 42%, #713746 72%, #222b48 100%);
-      box-shadow: inset -26px -14px 40px rgba(9, 14, 28, .76), 0 0 65px rgba(193, 91, 67, .2);
-    }
-    .planet::after {
-      position: absolute;
-      inset: 8% 16%;
-      border-top: 1px solid rgba(255, 219, 180, .27);
-      border-bottom: 1px solid rgba(255, 219, 180, .17);
-      border-radius: 50%;
-      content: "";
-      transform: rotate(-20deg);
-    }
-    .satellite {
-      position: absolute;
-      top: 17%;
-      right: 17%;
-      width: 20px;
-      height: 20px;
-      border: 2px solid #d5e0e8;
-      border-radius: 50%;
-      background: #61798d;
-      box-shadow: 0 0 22px rgba(118, 228, 230, .55);
-    }
-    .satellite::before, .satellite::after {
-      position: absolute;
-      top: 7px;
-      right: 17px;
-      width: 28px;
-      height: 7px;
-      border: 1px solid #8eabc0;
-      background: repeating-linear-gradient(90deg, #32485f 0 5px, #19293d 5px 7px);
-      content: "";
-    }
-    .satellite::after { right: auto; left: 17px; }
-    .signal {
-      position: absolute;
-      top: 15%;
-      right: 14%;
-      width: 50px;
-      height: 50px;
-      border: 1px solid rgba(118, 228, 230, .35);
-      border-radius: 50%;
-      animation: signal-pulse 4s ease-out infinite;
-    }
-    .signal::before, .signal::after {
-      position: absolute;
-      inset: 8px;
-      border: 1px solid rgba(118, 228, 230, .26);
-      border-radius: 50%;
-      content: "";
-    }
-    .signal::after { inset: 17px; }
-    .hero-caption {
-      position: absolute;
-      right: 4%;
-      bottom: 21%;
-      color: #bcc8d8;
-      font-size: .66rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-    }
-
-    section { position: relative; }
-    .intro { padding: 91px 0 82px; border-top: 1px solid rgba(195, 211, 231, .09); }
-    .intro-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(35px, 8vw, 112px); align-items: start; }
-    .intro h2, .section-heading h2 {
-      margin: 13px 0 0;
-      font: 400 clamp(2.15rem, 4vw, 3.75rem)/1.08 var(--serif);
-      letter-spacing: -.04em;
-    }
-    .intro-copy { max-width: 660px; padding-top: 4px; color: #c0cad8; font-size: .97rem; }
-    .intro-copy p { margin: 0 0 17px; }
-    .intro-copy strong { color: var(--ink); font-weight: 600; }
-    .pull-quote {
-      margin: 28px 0 0;
-      padding: 5px 0 5px 20px;
-      border-left: 2px solid var(--orange);
-      color: var(--orange-light);
-      font: italic 1.38rem/1.4 var(--serif);
-    }
-
-    .journey { padding: 55px 0 64px; background: linear-gradient(90deg, rgba(17, 27, 45, .54), rgba(17, 27, 45, .18)); border-block: 1px solid rgba(195, 211, 231, .1); }
-    .journey-top { display: flex; align-items: end; justify-content: space-between; gap: 24px; }
-    .journey h2 { margin: 9px 0 0; font: 400 clamp(1.8rem, 3vw, 2.45rem)/1.1 var(--serif); }
-    .journey-note { margin: 0; color: var(--muted); font-size: .75rem; }
-    .journey-line { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 46px; }
-    .journey-line::before { position: absolute; top: 7px; right: 0; left: 0; height: 1px; background: linear-gradient(90deg, var(--orange), #c9a9a0 33%, var(--cyan) 70%, #7894b4); content: ""; }
-    .journey-stop { position: relative; padding-top: 26px; color: #dbe3ec; font-size: .79rem; letter-spacing: .11em; text-transform: uppercase; }
-    .journey-stop::before {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 15px;
-      height: 15px;
-      border: 1px solid var(--cyan);
-      border-radius: 50%;
-      background: var(--space);
-      box-shadow: 0 0 13px rgba(118, 228, 230, .25);
-      content: "";
-    }
-    .journey-stop:first-child::before { border-color: var(--orange); }
-    .journey-stop span { display: block; margin-top: 5px; color: var(--dim); font-size: .65rem; letter-spacing: .02em; text-transform: none; }
-
-    .collection { padding: 105px 0 104px; }
-    .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 38px; }
-    .section-heading p { max-width: 320px; margin: 0 0 5px; color: var(--muted); font-size: .82rem; }
-    .collection-count { display: inline-flex; align-items: baseline; gap: 8px; margin-top: 17px; color: var(--muted); font-size: .76rem; }
-    .collection-count strong { color: var(--cyan); font-size: 1.08rem; }
-    .progress-track { width: min(100%, 205px); height: 3px; margin-top: 10px; overflow: hidden; background: rgba(185, 202, 220, .16); }
-    .progress-fill { width: 0; height: 100%; background: linear-gradient(90deg, var(--orange), var(--cyan)); transition: width .45s ease; }
-    .exhibits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 19px; }
-    .exhibit {
-      position: relative;
-      display: grid;
-      min-height: 312px;
-      grid-template-columns: 1fr 1fr;
-      overflow: hidden;
-      border: 1px solid rgba(195, 211, 231, .13);
-      border-radius: 4px;
-      background: linear-gradient(145deg, rgba(23, 35, 55, .91), rgba(13, 21, 36, .94));
-      transition: border-color .25s ease, transform .25s ease, box-shadow .25s ease;
-    }
-    .exhibit:hover { transform: translateY(-4px); border-color: rgba(118, 228, 230, .42); box-shadow: 0 16px 38px rgba(0, 0, 0, .2); }
-    .exhibit-copy { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; padding: 27px 0 25px 27px; }
-    .exhibit-index { color: var(--dim); font-size: .64rem; letter-spacing: .16em; }
-    .exhibit h3 { margin: 14px 0 2px; font: 400 clamp(1.45rem, 3vw, 2rem)/1.05 var(--serif); letter-spacing: -.035em; }
-    .exhibit-type { margin: 0; color: var(--cyan); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; }
-    .exhibit-description { max-width: 235px; margin: 16px 0 0; color: #bec8d5; font-size: .78rem; line-height: 1.6; }
-    .status {
-      display: inline-flex;
-      align-items: flex-start;
-      gap: 8px;
-      margin-top: auto;
-      padding-top: 18px;
-      color: #c8d2df;
-      font-size: .67rem;
-      line-height: 1.45;
-    }
-    .status::before { flex: 0 0 6px; width: 6px; height: 6px; margin-top: 5px; border-radius: 50%; background: var(--orange); content: ""; }
-    .status-travel::before { background: var(--cyan); box-shadow: 0 0 9px rgba(118, 228, 230, .6); }
-    .story-button { min-height: 38px; margin-top: 17px; padding: 0 12px; border-color: rgba(195, 211, 231, .25); background: transparent; color: var(--ink); font-size: .7rem; }
-    .story-button:hover { border-color: var(--cyan); background: rgba(118, 228, 230, .08); color: var(--cyan); }
-    .exhibit-art { position: relative; min-width: 0; overflow: hidden; }
-    .mars-ground {
-      position: absolute;
-      right: -10%;
-      bottom: -9%;
-      left: -9%;
-      height: 36%;
-      border-radius: 50% 50% 0 0;
-      background: linear-gradient(180deg, #9a5142, #462b35);
-    }
-    .mars-ground::before, .mars-ground::after {
-      position: absolute;
-      top: 25%;
-      left: 17%;
-      width: 17px;
-      height: 9px;
-      border-radius: 50%;
-      background: rgba(35, 27, 36, .55);
-      content: "";
-      transform: rotate(-17deg);
-    }
-    .mars-ground::after { top: 48%; left: 69%; width: 24px; height: 7px; }
-    .rover {
-      position: absolute;
-      z-index: 1;
-      right: 19%;
-      bottom: 26%;
-      width: 93px;
-      height: 44px;
-      border-bottom: 7px solid #d3a176;
-      background: linear-gradient(160deg, transparent 22%, #d2a375 23% 55%, transparent 56%);
-      filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .3));
-    }
-    .rover::before {
-      position: absolute;
-      top: 10px;
-      left: 31px;
-      width: 31px;
-      height: 18px;
-      border: 2px solid #f0c99b;
-      background: #8e5c4c;
-      content: "";
-      transform: skew(-18deg);
-    }
-    .rover::after {
-      position: absolute;
-      top: 0;
-      left: 51px;
-      width: 5px;
-      height: 17px;
-      background: #d9c39d;
-      box-shadow: 0 -3px 0 2px #c5b08f;
-      content: "";
-    }
-    .wheel {
-      position: absolute;
-      bottom: -7px;
-      width: 17px;
-      height: 17px;
-      border: 3px solid #d9bc96;
-      border-radius: 50%;
-      background: #45424a;
-    }
-    .wheel.one { left: 7px; }
-    .wheel.two { left: 37px; }
-    .wheel.three { right: 8px; }
-    .rover-mini { right: 10%; bottom: 33%; transform: scale(.72); transform-origin: bottom right; }
-    .rover-small { right: 16%; bottom: 28%; transform: scale(.62); transform-origin: bottom right; }
-    .art-label {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      color: rgba(238, 239, 234, .74);
-      font-size: .57rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-    }
-    .art-glow {
-      position: absolute;
-      top: 18%;
-      right: 20%;
-      width: 90px;
-      aspect-ratio: 1;
-      border-radius: 50%;
-      background: rgba(255, 170, 125, .11);
-      filter: blur(16px);
-    }
-    .insight-art {
-      background:
-        radial-gradient(ellipse at 73% 80%, rgba(186, 128, 104, .28), transparent 38%),
-        linear-gradient(155deg, #1d3040, #172337 68%);
-    }
-    .insight-art::before {
-      position: absolute;
-      right: 13%;
-      bottom: 17%;
-      left: 10%;
-      height: 1px;
-      background: rgba(230, 195, 153, .38);
-      box-shadow: 0 -5px 0 rgba(230, 195, 153, .12);
-      content: "";
-    }
-    .lander {
-      position: absolute;
-      z-index: 1;
-      right: 25%;
-      bottom: 20%;
-      width: 90px;
-      height: 70px;
-    }
-    .lander-body {
-      position: absolute;
-      top: 9px;
-      left: 25px;
-      width: 42px;
-      height: 33px;
-      border: 2px solid #d2d7d4;
-      background: linear-gradient(145deg, #9ca9a8, #596e78);
-      clip-path: polygon(20% 0, 80% 0, 100% 80%, 0 80%);
-    }
-    .lander-body::after { position: absolute; top: 5px; left: 16px; width: 8px; height: 8px; border-radius: 50%; background: var(--orange-light); content: ""; }
-    .leg { position: absolute; top: 36px; width: 3px; height: 27px; background: #b7c1bc; transform-origin: top; }
-    .leg.left { left: 31px; transform: rotate(35deg); }
-    .leg.right { right: 31px; transform: rotate(-35deg); }
-    .foot { position: absolute; bottom: 7px; width: 18px; height: 3px; background: #c5c7bd; }
-    .foot.left { left: 13px; transform: rotate(-12deg); }
-    .foot.right { right: 13px; transform: rotate(12deg); }
-    .seismic-line {
-      position: absolute;
-      top: 31%;
-      left: 13%;
-      width: 35%;
-      height: 25px;
-      border-top: 1px solid rgba(118, 228, 230, .7);
-      clip-path: polygon(0 45%, 20% 45%, 28% 25%, 34% 65%, 40% 0, 47% 85%, 54% 37%, 65% 45%, 100% 45%, 100% 51%, 65% 51%, 54% 44%, 47% 92%, 40% 9%, 34% 74%, 28% 32%, 20% 52%, 0 52%);
-      background: var(--cyan);
-      filter: drop-shadow(0 0 5px var(--cyan));
-    }
-    .voyager-art { background: radial-gradient(ellipse at 67% 45%, rgba(68, 112, 145, .22), transparent 40%), linear-gradient(145deg, #15253a, #101a2d); }
-    .voyager-star { position: absolute; top: 38%; left: 39%; width: 3px; height: 3px; border-radius: 50%; background: #fff; box-shadow: 0 0 13px 3px rgba(118, 228, 230, .5); }
-    .voyager-craft { position: absolute; top: 39%; left: 55%; width: 75px; height: 50px; transform: rotate(-19deg); }
-    .voyager-dish { position: absolute; top: 2px; left: 5px; width: 29px; height: 29px; border: 2px solid #d4d7ce; border-radius: 50%; background: radial-gradient(circle, #687a7b 0 25%, #c1c4b8 28% 34%, transparent 38%); }
-    .voyager-body { position: absolute; top: 13px; left: 39px; width: 20px; height: 21px; border: 1px solid #c5b27d; background: repeating-linear-gradient(0deg, #687080 0 3px, #d0bb82 3px 5px); }
-    .voyager-arm { position: absolute; top: 24px; left: 29px; width: 22px; height: 2px; background: #c4c7bb; }
-    .voyager-boom { position: absolute; top: 28px; left: 54px; width: 21px; height: 2px; background: #c2c7bf; transform: rotate(23deg); transform-origin: left; }
-    .record { position: absolute; top: 8px; left: 64px; width: 10px; height: 9px; border: 1px solid var(--gold); border-radius: 1px; transform: rotate(17deg); }
-    .signal-trail { position: absolute; top: 41%; left: 7%; width: 36%; height: 1px; background: linear-gradient(90deg, transparent, rgba(118, 228, 230, .55)); transform: rotate(-5deg); }
-    .signal-trail::before, .signal-trail::after { position: absolute; top: -13px; right: 10%; width: 25px; height: 26px; border-right: 1px solid rgba(118, 228, 230, .22); border-radius: 50%; content: ""; }
-    .signal-trail::after { right: -3%; width: 43px; height: 44px; top: -22px; }
-
-    .evidence-section { padding: 88px 0 95px; background: linear-gradient(180deg, rgba(14, 22, 38, .4), rgba(15, 26, 42, .78)); border-block: 1px solid rgba(195, 211, 231, .1); }
-    .evidence-layout { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(40px, 9vw, 115px); align-items: center; }
-    .evidence-copy h2, .quiz-copy h2 { margin: 14px 0 16px; font: 400 clamp(2.3rem, 4vw, 3.5rem)/1.04 var(--serif); letter-spacing: -.045em; }
-    .evidence-copy > p, .quiz-copy > p { max-width: 420px; color: var(--muted); font-size: .87rem; }
-    .evidence-instruction { margin-top: 25px; color: var(--cyan); font-size: .71rem; letter-spacing: .05em; }
-    .instrument-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-    .instrument {
-      min-height: 135px;
-      padding: 17px;
-      border: 1px solid rgba(195, 211, 231, .15);
-      border-radius: 3px;
-      background: rgba(18, 30, 48, .77);
-      color: var(--ink);
-      cursor: pointer;
-      text-align: left;
-      transition: border-color .2s ease, background .2s ease, transform .2s ease;
-    }
-    .instrument:hover, .instrument[aria-pressed="true"] { transform: translateY(-2px); border-color: rgba(118, 228, 230, .62); background: rgba(23, 45, 59, .87); }
-    .instrument-symbol { display: block; margin-bottom: 10px; color: var(--orange-light); font: 1.35rem/1 var(--serif); }
-    .instrument strong { display: block; font-size: .79rem; }
-    .instrument span:last-child { display: block; margin-top: 4px; color: var(--muted); font-size: .67rem; }
-    .evidence-result {
-      min-height: 78px;
-      grid-column: 1 / -1;
-      padding: 15px 17px;
-      border-left: 2px solid var(--cyan);
-      background: rgba(8, 13, 26, .5);
-      color: #c6d0dc;
-      font-size: .79rem;
-    }
-    .evidence-result strong { display: block; margin-bottom: 2px; color: var(--cyan); font-size: .68rem; letter-spacing: .09em; text-transform: uppercase; }
-
-    .quiz-section { padding: 102px 0; }
-    .quiz-layout { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(38px, 8vw, 105px); align-items: start; }
-    .quiz-copy p { margin-bottom: 0; }
-    .quiz-card {
-      padding: clamp(21px, 4vw, 37px);
-      border: 1px solid rgba(195, 211, 231, .15);
-      border-radius: 4px;
-      background: linear-gradient(145deg, rgba(23, 35, 55, .9), rgba(13, 21, 36, .93));
-    }
-    .quiz-progress { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: .69rem; letter-spacing: .07em; text-transform: uppercase; }
-    .quiz-card h3 { margin: 20px 0 18px; font: 400 clamp(1.35rem, 2.8vw, 1.8rem)/1.25 var(--serif); }
-    .answer-list { display: grid; gap: 9px; }
-    .answer-button {
-      display: flex;
-      width: 100%;
-      min-height: 47px;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 13px;
-      border: 1px solid rgba(195, 211, 231, .19);
-      border-radius: 2px;
-      background: rgba(9, 15, 27, .42);
-      color: #e8eaf0;
-      cursor: pointer;
-      font-size: .79rem;
-      text-align: left;
-      transition: border-color .2s ease, background .2s ease;
-    }
-    .answer-button:hover:not(:disabled) { border-color: var(--cyan); background: rgba(118, 228, 230, .07); }
-    .answer-button:disabled { cursor: default; opacity: .72; }
-    .answer-button.correct { border-color: #80d5ae; background: rgba(55, 131, 98, .18); opacity: 1; }
-    .answer-button.incorrect { border-color: #ff9a85; background: rgba(151, 70, 57, .17); opacity: 1; }
-    .answer-key { display: grid; width: 23px; height: 23px; flex: 0 0 23px; place-items: center; border: 1px solid rgba(195, 211, 231, .25); border-radius: 50%; color: var(--muted); font-size: .65rem; }
-    .quiz-feedback { min-height: 28px; margin: 14px 0 0; color: var(--muted); font-size: .75rem; }
-    .quiz-feedback.is-correct { color: #9de3bd; }
-    .quiz-feedback.is-incorrect { color: #ffb1a0; }
-    .quiz-next { margin-top: 13px; }
-    .quiz-next[hidden] { display: none; }
-    .quiz-result { padding: 12px 0 2px; }
-    .quiz-result[hidden] { display: none; }
-    .quiz-result-score { margin: 8px 0; color: var(--orange-light); font: 2.6rem/1 var(--serif); }
-    .quiz-result p { color: #c3ccda; font-size: .84rem; }
-
-    .sources { padding: 77px 0 70px; border-top: 1px solid rgba(195, 211, 231, .12); background: rgba(8, 13, 26, .55); }
-    .sources-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(38px, 8vw, 105px); }
-    .sources h2 { margin: 12px 0 10px; font: 400 clamp(2rem, 3vw, 2.8rem)/1.1 var(--serif); }
-    .sources-intro { max-width: 330px; color: var(--muted); font-size: .8rem; }
-    .source-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 25px; margin: 0; padding: 0; list-style: none; }
-    .source-list li { border-bottom: 1px solid rgba(195, 211, 231, .13); }
-    .source-list a { display: flex; min-height: 51px; align-items: center; justify-content: space-between; gap: 12px; color: #d4dce6; font-size: .74rem; text-decoration: none; }
-    .source-list a:hover { color: var(--cyan); }
-    .source-list a span:last-child { color: var(--dim); font-size: .9rem; }
-    .accuracy-note { grid-column: 1 / -1; margin: 25px 0 0; padding: 14px 16px; border-left: 2px solid var(--orange); background: rgba(255, 145, 107, .055); color: #c5ccd5; font-size: .72rem; }
-    .footer { padding: 20px 0 30px; color: var(--dim); font-size: .66rem; }
-    .footer-inner { display: flex; justify-content: space-between; gap: 20px; }
-
-    dialog {
-      width: min(720px, calc(100% - 30px));
-      max-height: min(88svh, 850px);
-      padding: 0;
-      overflow: auto;
-      border: 1px solid rgba(195, 211, 231, .25);
-      border-radius: 5px;
-      background: #101a2a;
-      color: var(--ink);
-      box-shadow: 0 32px 120px rgba(0, 0, 0, .65);
-    }
-    dialog::backdrop { background: rgba(3, 6, 13, .78); backdrop-filter: blur(5px); }
-    .dialog-inner { padding: clamp(24px, 5vw, 46px); }
-    .dialog-top { display: flex; align-items: start; justify-content: space-between; gap: 20px; }
-    .dialog-kicker { color: var(--cyan); font-size: .68rem; letter-spacing: .15em; text-transform: uppercase; }
-    .dialog-title { margin: 8px 0 4px; font: 400 clamp(2.15rem, 6vw, 3.4rem)/1 var(--serif); letter-spacing: -.045em; }
-    .dialog-type { margin: 0; color: var(--muted); font-size: .75rem; }
-    .dialog-close {
-      display: grid;
-      width: 39px;
-      height: 39px;
-      flex: 0 0 39px;
-      place-items: center;
-      border: 1px solid var(--line);
-      border-radius: 50%;
-      background: transparent;
-      color: var(--ink);
-      cursor: pointer;
-      font-size: 1.2rem;
-    }
-    .dialog-close:hover { border-color: var(--cyan); color: var(--cyan); }
-    .dialog-status { display: inline-block; margin: 19px 0 24px; padding: 5px 9px; border: 1px solid rgba(255, 145, 107, .32); border-radius: 2px; color: var(--orange-light); font-size: .7rem; }
-    .dialog-status.traveling { border-color: rgba(118, 228, 230, .32); color: var(--cyan); }
-    .story-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 17px 23px; }
-    .story-fact { padding-top: 12px; border-top: 1px solid rgba(195, 211, 231, .15); }
-    .story-fact h3 { margin: 0 0 5px; color: var(--cyan); font-size: .67rem; letter-spacing: .12em; text-transform: uppercase; }
-    .story-fact p { margin: 0; color: #c5cfdb; font-size: .8rem; line-height: 1.6; }
-    .creative-voice { grid-column: 1 / -1; margin: 5px 0 0; padding: 17px 19px; border-left: 2px solid var(--orange); background: rgba(255, 145, 107, .06); color: var(--orange-light); font: italic 1.18rem/1.5 var(--serif); }
-    .creative-voice cite { display: block; margin-top: 8px; color: #c4cedb; font: 600 .62rem/1.4 var(--sans); letter-spacing: .12em; text-transform: uppercase; }
-    dialog.mission-complete {
-      position: fixed;
-      z-index: 10;
-      inset: 0;
-      width: 100%;
-      max-width: none;
-      height: 100%;
-      max-height: none;
-      display: grid;
-      place-items: center;
-      padding: 24px;
+      padding: 10px 23px;
       border: 0;
-      background: rgba(5, 9, 19, .9);
-      color: var(--ink);
-      backdrop-filter: blur(9px);
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: .98rem;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 5px 0 rgba(42,57,106,.15);
+      transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
     }
-    dialog.mission-complete:not([open]) { display: none; }
-    dialog.mission-complete[open] { display: grid; }
-    dialog.mission-complete::backdrop { background: transparent; }
-    .ending-card {
-      position: relative;
-      width: min(620px, 100%);
-      padding: clamp(29px, 6vw, 58px);
+    .button:hover { transform: translateY(-2px); box-shadow: 0 7px 0 rgba(42,57,106,.13); filter: brightness(1.04); }
+    .button:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(42,57,106,.15); }
+    .button-next { background: var(--blue); color: white; }
+    .button-back { border: 2px solid rgba(55,74,130,.2); background: rgba(255,255,255,.65); color: #354978; box-shadow: none; }
+    .button-back:hover { background: white; }
+    .button-back:disabled { opacity: .43; cursor: not-allowed; transform: none; }
+    .button-restart { background: #e98594; color: #392b45; }
+    .book-spine {
+      width: 115px;
+      height: 6px;
       overflow: hidden;
-      border: 1px solid rgba(118, 228, 230, .33);
-      border-radius: 4px;
-      background: linear-gradient(145deg, #142337, #101827);
-      text-align: center;
-      box-shadow: 0 28px 100px rgba(0, 0, 0, .45);
+      border-radius: 99px;
+      background: rgba(54,73,125,.14);
     }
-    .ending-card::before {
-      position: absolute;
-      top: -130px;
-      left: 50%;
-      width: 280px;
-      aspect-ratio: 1;
-      border: 1px solid rgba(118, 228, 230, .15);
-      border-radius: 50%;
-      box-shadow: 0 0 0 27px rgba(118, 228, 230, .03), 0 0 0 61px rgba(118, 228, 230, .025);
-      content: "";
-      transform: translateX(-50%);
-      pointer-events: none;
+    .book-spine-fill { width: 16.6667%; height: 100%; border-radius: inherit; background: linear-gradient(90deg,#f28d8e,#ffc964,#62bdab); transition: width .35s ease; }
+    .sources-page { width: min(760px, 100%); margin: auto; }
+    .sources-page h1 { font-size: clamp(2.4rem, 5vw, 3.8rem); }
+    .sources-page > p { max-width: 650px; color: #414f70; }
+    .source-list { display: grid; gap: 10px; margin: 24px 0; padding: 0; list-style: none; }
+    .source-list a {
+      display: flex;
+      min-height: 55px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 16px;
+      border: 2px solid rgba(57,78,139,.14);
+      border-radius: 13px;
+      background: rgba(255,255,255,.73);
+      color: #334577;
+      font-size: .92rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform .18s ease, border-color .18s ease;
     }
-    .ending-card > * { position: relative; }
-    .ending-icon { display: inline-grid; width: 45px; height: 45px; place-items: center; border: 1px solid var(--cyan); border-radius: 50%; color: var(--cyan); font-size: 1.15rem; }
-    .ending-card h2 { margin: 21px 0 10px; font: 400 clamp(2.25rem, 7vw, 3.7rem)/1 var(--serif); letter-spacing: -.04em; }
-    .ending-card p { color: #c5cfdb; font-size: .88rem; }
-    .ending-card blockquote { margin: 22px 0 25px; color: var(--orange-light); font: italic 1.27rem/1.45 var(--serif); }
-    .ending-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
-    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    .source-list a:hover { transform: translateX(3px); border-color: #8498e2; }
+    .source-arrow { flex: 0 0 auto; color: #667ac7; }
+    .source-note { padding: 13px 15px; border-left: 4px solid #efbd43; border-radius: 0 9px 9px 0; background: #fff6d8; color: #53607b; font-size: .82rem; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
-    @keyframes star-drift { to { background-position: 390px 320px; } }
-    @keyframes signal-pulse { 0% { transform: scale(.65); opacity: .8; } 90%, 100% { transform: scale(1.55); opacity: 0; } }
-    @media (max-width: 860px) {
-      .orbital-illustration { top: 20%; right: -7%; width: 47vw; opacity: .62; }
-      .hero-content { max-width: 610px; }
-      .exhibit { grid-template-columns: 1.1fr .9fr; }
-      .exhibit-copy { padding-left: 21px; }
-      .evidence-layout, .quiz-layout, .sources-grid { grid-template-columns: 1fr; gap: 34px; }
-      .evidence-copy > p, .quiz-copy > p, .sources-intro { max-width: 600px; }
-      .source-list { max-width: 760px; }
+    @keyframes twinkle { from { opacity: .45; } to { opacity: 1; } }
+    @keyframes float { 0%,100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+    @keyframes signal { from { opacity: .5; scale: .94; } to { opacity: 1; scale: 1.08; } }
+    @keyframes page-in { from { opacity: 0; translate: 0 12px; } to { opacity: 1; translate: 0 0; } }
+
+    @media (max-width: 720px) {
+      .topbar { width: calc(100% - 32px); min-height: 66px; }
+      .page-inner { width: min(560px, 100%); grid-template-columns: 1fr; gap: 22px; }
+      .story-page { justify-content: flex-start; padding: 23px 19px 24px; }
+      .story-copy { max-width: none; }
+      .page-label { font-size: .66rem; }
+      h1 { margin: 13px 0 9px; font-size: clamp(2.15rem, 9.5vw, 3.4rem); }
+      .chapter-story { font-size: 1rem; line-height: 1.53; }
+      .machine-notes { gap: 7px; margin-top: 14px; }
+      .note { padding: 8px 10px; font-size: .76rem; }
+      .scene-wrap { grid-row: 1; min-height: clamp(215px, 55vw, 315px); max-height: 315px; }
+      .controls { margin-top: 22px; }
+      .button { min-height: 49px; padding: 9px 18px; font-size: .9rem; }
+      .book-spine { width: 66px; }
     }
-    @media (max-width: 600px) {
-      html { scroll-padding-top: 69px; }
-      .wrap { width: min(var(--content), calc(100% - 34px)); }
-      .nav { min-height: 66px; gap: 8px; }
-      .brand { gap: 8px; font-size: .65rem; letter-spacing: .09em; }
-      .brand-mark { width: 25px; height: 25px; flex: 0 0 25px; }
-      .nav-links { gap: 13px; }
-      .nav-links a { font-size: .68rem; }
-      .nav-links a:nth-child(2) { display: none; }
-      .nav-progress { font-size: .62rem; }
-      .hero { min-height: 760px; min-height: min(790px, 100svh); align-items: start; padding: 149px 0 66px; }
-      .hero h1 { max-width: 450px; margin-top: 19px; font-size: clamp(3.4rem, 16vw, 5.6rem); }
-      .hero-subtitle { max-width: 370px; font-size: 1.08rem; }
-      .orbital-illustration { top: auto; right: -8%; bottom: 1%; width: 65vw; opacity: .48; }
-      .hero-caption { right: 5%; bottom: 8%; font-size: .54rem; }
-      .hero-aside { right: 18px; bottom: 115px; font-size: .56rem; }
-      .hero-actions { gap: 10px; margin-top: 25px; }
-      .button { min-height: 45px; padding-inline: 14px; font-size: .72rem; }
-      .intro { padding: 70px 0 62px; }
-      .intro-grid { grid-template-columns: 1fr; gap: 23px; }
-      .intro-copy { padding: 0; font-size: .9rem; }
-      .pull-quote { margin-top: 21px; font-size: 1.2rem; }
-      .journey { padding: 45px 0 48px; }
-      .journey-top { align-items: start; flex-direction: column; gap: 10px; }
-      .journey-line { margin-top: 35px; }
-      .journey-stop { font-size: .62rem; letter-spacing: .04em; }
-      .journey-stop span { max-width: 78px; font-size: .59rem; }
-      .collection { padding: 72px 0; }
-      .section-heading { align-items: start; flex-direction: column; gap: 12px; margin-bottom: 25px; }
-      .section-heading p { max-width: 440px; }
-      .exhibits { grid-template-columns: 1fr; gap: 13px; }
-      .exhibit { min-height: 285px; grid-template-columns: 1.08fr .92fr; }
-      .exhibit h3 { font-size: 1.72rem; }
-      .exhibit-copy { padding: 22px 0 19px 19px; }
-      .exhibit-description { margin-top: 12px; font-size: .74rem; }
-      .status { padding-top: 13px; font-size: .63rem; }
-      .evidence-section { padding: 68px 0; }
-      .evidence-layout { gap: 27px; }
-      .instrument-grid { gap: 9px; }
-      .instrument { min-height: 122px; padding: 13px; }
-      .quiz-section { padding: 74px 0; }
-      .quiz-layout { gap: 24px; }
-      .quiz-card { padding: 20px 17px; }
-      .sources { padding: 64px 0 50px; }
-      .source-list { grid-template-columns: 1fr; }
-      .accuracy-note { grid-column: auto; }
-      .footer-inner { flex-direction: column; gap: 5px; }
-      .story-facts { grid-template-columns: 1fr; gap: 13px; }
-      .creative-voice { grid-column: auto; }
-      .dialog-inner { padding: 24px 20px; }
+    @media (max-width: 420px) {
+      body { font-size: 16px; }
+      .wordmark { font-size: .7rem; }
+      .top-actions { gap: 8px; }
+      .chapter-count { font-size: .73rem; }
+      .sources-link { min-height: 37px; padding-inline: 11px; font-size: .74rem; }
+      .story-page { padding-inline: 16px; }
+      .scene-wrap { min-height: 210px; }
+      .note { font-size: .73rem; }
+      .controls { gap: 8px; }
+      .button { gap: 6px; padding-inline: 14px; font-size: .83rem; }
+      .book-spine { width: 39px; }
     }
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        scroll-behavior: auto !important;
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: .01ms !important;
-      }
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
   </style>
 </head>
 <body>
-  <header class="site-header">
-    <nav class="nav wrap" aria-label="Main navigation">
-      <a class="brand" href="#top" aria-label="The Machines That Remain, home">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span>Field notes from space</span>
-      </a>
-      <div class="nav-links">
-        <a href="#collection">Explorers</a>
-        <a href="#evidence">Evidence lab</a>
-        <a href="#sources">Sources</a>
+  <div class="book">
+    <div class="sky-dots" aria-hidden="true"></div>
+    <header class="topbar">
+      <a class="wordmark" href="#" id="home-link"><span class="wordmark-star" aria-hidden="true">✦</span> Leo and the Lost Space Machines</a>
+      <div class="top-actions">
+        <div class="chapter-count" id="chapter-count" aria-live="polite">Chapter <strong>1</strong> of 6</div>
+        <button class="sources-link" id="sources-button" type="button">Sources</button>
       </div>
-      <div class="nav-progress" aria-live="polite"><strong id="nav-count">0 / 4</strong> discovered</div>
-    </nav>
-  </header>
+    </header>
 
-  <main id="top">
-    <section class="hero" aria-labelledby="page-title">
-      <div class="wrap hero-content">
-        <span class="eyebrow">A NASA Space Apps storybook</span>
-        <h1 id="page-title">The Machines<br><span>That Remain</span></h1>
-        <p class="hero-subtitle">Stories of the robotic explorers that changed what we know about other worlds.</p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="#collection">Meet the explorers <span class="button-arrow" aria-hidden="true">→</span></a>
-          <a class="button button-quiet" href="#opening">Begin the story</a>
-        </div>
-      </div>
-      <div class="orbital-illustration" aria-hidden="true">
-        <div class="orbit-ring"></div><div class="orbit-ring two"></div><div class="orbit-ring three"></div>
-        <div class="planet"></div><div class="satellite"></div><div class="signal"></div>
-      </div>
-      <span class="hero-caption" aria-hidden="true">A small machine. A much larger world.</span>
-      <span class="hero-aside" aria-hidden="true">Scroll to explore</span>
-    </section>
-
-    <section class="intro" id="opening" aria-labelledby="opening-title">
-      <div class="wrap intro-grid">
-        <div>
-          <span class="eyebrow">Opening transmission</span>
-          <h2 id="opening-title">Some machines stop speaking. Their discoveries do not.</h2>
-        </div>
-        <div class="intro-copy">
-          <p>Across the solar system, <strong>human-made explorers remain where their missions ended</strong>: rovers resting on Mars, landers on its surface, instruments listening beneath the ground, and probes traveling far beyond the planets.</p>
-          <p>They were built from metal, wire, careful questions, and a little courage. We sent them to look, to listen, and to go farther than we could. Here, each machine gets to tell the story of what it found — and what it left behind.</p>
-          <blockquote class="pull-quote">“A mission can end. A discovery keeps moving.”</blockquote>
-        </div>
-      </div>
-    </section>
-
-    <section class="journey" aria-labelledby="journey-title">
-      <div class="wrap">
-        <div class="journey-top">
-          <div><span class="eyebrow">A journey in four acts</span><h2 id="journey-title">From first signal to last.</h2></div>
-          <p class="journey-note">Every explorer has a different ending. The questions continue.</p>
-        </div>
-        <div class="journey-line" aria-label="Mission journey: Launch, Landing, Discovery, Final Signal">
-          <div class="journey-stop">Launch<span>A question leaves Earth</span></div>
-          <div class="journey-stop">Landing<span>A new world, up close</span></div>
-          <div class="journey-stop">Discovery<span>Evidence becomes knowledge</span></div>
-          <div class="journey-stop">Final signal<span>Or a journey still underway</span></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="collection" id="collection" aria-labelledby="collection-title">
-      <div class="wrap">
-        <div class="section-heading">
-          <div>
-            <span class="eyebrow">The collection · four explorers</span>
-            <h2 id="collection-title">Meet the machines.</h2>
-            <div class="collection-count" aria-live="polite"><strong id="collection-count">0 of 4</strong> explorers discovered</div>
-            <div class="progress-track" role="progressbar" aria-label="Explorers discovered" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0" id="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <main class="story-page" id="story-page" aria-live="polite">
+      <div class="page-inner">
+        <article class="story-copy">
+          <span class="page-label" id="page-label"></span>
+          <h1 id="chapter-title" tabindex="-1"></h1>
+          <p class="chapter-story" id="chapter-story"></p>
+          <div class="machine-notes" id="machine-notes"></div>
+        </article>
+        <div class="scene-wrap" id="scene" role="img">
+          <span class="cloud" aria-hidden="true"></span>
+          <span class="cloud cloud-two" aria-hidden="true"></span>
+          <span class="hill" aria-hidden="true"></span>
+          <span class="stars-scene" aria-hidden="true"></span>
+          <span class="message-wave" aria-hidden="true"></span>
+          <div class="leo" id="leo" aria-hidden="true">
+            <span class="leo-hair"></span><span class="leo-head"></span><span class="leo-eye"></span><span class="leo-smile"></span>
+            <span class="leo-body"></span><span class="leo-arm left"></span><span class="leo-arm right"></span><span class="leo-leg"></span><span class="leo-shoe"></span>
           </div>
-          <p>Each exhibit is a doorway. Open a story to discover its mission, its instruments, and the signal it left behind.</p>
-        </div>
-        <div class="exhibits">
-          <article class="exhibit">
-            <div class="exhibit-copy">
-              <span class="exhibit-index">EXHIBIT 01 · MARS</span>
-              <h3>Opportunity</h3>
-              <p class="exhibit-type">Mars rover</p>
-              <p class="exhibit-description">A 90-sol mission that kept rolling for almost 15 years.</p>
-              <span class="status">Mission complete — silent on Mars</span>
-              <button class="button story-button" type="button" data-story="opportunity">Open the story <span aria-hidden="true">↗</span></button>
-            </div>
-            <div class="exhibit-art opportunity-art" aria-hidden="true">
-              <span class="art-label">Meridiani Planum</span><span class="art-glow"></span>
-              <div class="mars-ground"></div><div class="rover"><i class="wheel one"></i><i class="wheel two"></i><i class="wheel three"></i></div>
-            </div>
-          </article>
-          <article class="exhibit">
-            <div class="exhibit-copy">
-              <span class="exhibit-index">EXHIBIT 02 · MARS</span>
-              <h3>InSight</h3>
-              <p class="exhibit-type">Mars lander</p>
-              <p class="exhibit-description">A patient listener, reading the planet from the inside out.</p>
-              <span class="status">Mission complete — listening legacy</span>
-              <button class="button story-button" type="button" data-story="insight">Open the story <span aria-hidden="true">↗</span></button>
-            </div>
-            <div class="exhibit-art insight-art" aria-hidden="true">
-              <span class="art-label">Elysium Planitia</span><div class="seismic-line"></div>
-              <div class="lander"><div class="lander-body"></div><i class="leg left"></i><i class="leg right"></i><i class="foot left"></i><i class="foot right"></i></div>
-            </div>
-          </article>
-          <article class="exhibit">
-            <div class="exhibit-copy">
-              <span class="exhibit-index">EXHIBIT 03 · MARS</span>
-              <h3>Sojourner</h3>
-              <p class="exhibit-type">Mars rover</p>
-              <p class="exhibit-description">The first wheeled vehicle on another planet — and a pathfinder.</p>
-              <span class="status">Mission complete — pioneer rover</span>
-              <button class="button story-button" type="button" data-story="sojourner">Open the story <span aria-hidden="true">↗</span></button>
-            </div>
-            <div class="exhibit-art opportunity-art" aria-hidden="true">
-              <span class="art-label">Ares Vallis</span><div class="mars-ground"></div>
-              <div class="rover rover-mini"><i class="wheel one"></i><i class="wheel two"></i><i class="wheel three"></i></div>
-            </div>
-          </article>
-          <article class="exhibit">
-            <div class="exhibit-copy">
-              <span class="exhibit-index">EXHIBIT 04 · INTERSTELLAR SPACE</span>
-              <h3>Voyager 1</h3>
-              <p class="exhibit-type">Deep-space probe</p>
-              <p class="exhibit-description">A message from Earth, traveling beyond the Sun’s neighborhood.</p>
-              <span class="status status-travel">Still traveling — beyond the heliosphere</span>
-              <button class="button story-button" type="button" data-story="voyager">Open the story <span aria-hidden="true">↗</span></button>
-            </div>
-            <div class="exhibit-art voyager-art" aria-hidden="true">
-              <span class="art-label">Interstellar space</span><span class="voyager-star"></span><span class="signal-trail"></span>
-              <div class="voyager-craft"><i class="voyager-dish"></i><i class="voyager-body"></i><i class="voyager-arm"></i><i class="voyager-boom"></i><i class="record"></i></div>
-            </div>
-          </article>
+          <div class="robot" id="robot" aria-hidden="true">
+            <span class="robot-body"><i class="robot-eye"></i><i class="robot-smile"></i><i class="robot-panel"></i></span>
+            <span class="robot-wheel"></span><span class="robot-arm"></span><span class="antenna"></span>
+          </div>
+          <span class="record-star" aria-hidden="true"></span>
+          <span class="ending-garden" aria-hidden="true"><i class="flower flower-one"></i><i class="flower flower-two"></i><i class="flower flower-three"></i></span>
+          <span class="scene-caption" id="scene-caption" aria-hidden="true"></span>
         </div>
       </div>
-    </section>
+      <nav class="controls" aria-label="Story navigation">
+        <button class="button button-back" id="back-button" type="button">← Back</button>
+        <div class="book-spine" role="progressbar" aria-label="Story progress" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1" id="book-spine">
+          <div class="book-spine-fill" id="spine-fill"></div>
+        </div>
+        <button class="button button-next" id="next-button" type="button">Next Chapter <span aria-hidden="true">→</span></button>
+      </nav>
+    </main>
 
-    <section class="evidence-section" id="evidence" aria-labelledby="evidence-title">
-      <div class="wrap evidence-layout">
-        <div class="evidence-copy">
-          <span class="eyebrow">Touch the evidence</span>
-          <h2 id="evidence-title">Four ways to meet a world.</h2>
-          <p>A spacecraft is a collection of curious senses. Choose an instrument to see what it helped a mission observe.</p>
-          <p class="evidence-instruction">Select an evidence card to reveal its science.</p>
-        </div>
-        <div class="instrument-grid" aria-label="Interactive instrument collection">
-          <button class="instrument" type="button" aria-pressed="false" data-instrument="camera">
-            <span class="instrument-symbol" aria-hidden="true">◉</span><strong>Camera</strong><span>Look closely at another world</span>
-          </button>
-          <button class="instrument" type="button" aria-pressed="false" data-instrument="seismometer">
-            <span class="instrument-symbol" aria-hidden="true">⌁</span><strong>Seismometer</strong><span>Listen to a planet’s vibrations</span>
-          </button>
-          <button class="instrument" type="button" aria-pressed="false" data-instrument="wheels">
-            <span class="instrument-symbol" aria-hidden="true">◌</span><strong>Wheels</strong><span>Travel across the surface</span>
-          </button>
-          <button class="instrument" type="button" aria-pressed="false" data-instrument="antenna">
-            <span class="instrument-symbol" aria-hidden="true">⌁</span><strong>Antenna</strong><span>Send science home through space</span>
-          </button>
-          <div class="evidence-result" id="evidence-result" aria-live="polite">
-            <strong>Evidence awaits</strong>
-            Choose one of the instruments above to begin.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="quiz-section" id="quiz" aria-labelledby="quiz-title">
-      <div class="wrap quiz-layout">
-        <div class="quiz-copy">
-          <span class="eyebrow">A moment to remember</span>
-          <h2 id="quiz-title">What did we learn?</h2>
-          <p>Three questions. No pressure. See how much of each explorer’s story stayed with you.</p>
-        </div>
-        <div class="quiz-card" aria-live="polite">
-          <div id="quiz-question-view">
-            <div class="quiz-progress"><span id="quiz-step">Question 1 of 3</span><span id="quiz-score">Score: 0</span></div>
-            <h3 id="question-text" tabindex="-1"></h3>
-            <div class="answer-list" id="answer-list"></div>
-            <p class="quiz-feedback" id="quiz-feedback" role="status" aria-live="polite"></p>
-            <button class="button button-primary quiz-next" id="quiz-next" type="button" hidden>Next question <span aria-hidden="true">→</span></button>
-          </div>
-          <div class="quiz-result" id="quiz-result" hidden>
-            <span class="eyebrow">Mission debrief</span>
-            <h3>Your answers are part of the archive.</h3>
-            <div class="quiz-result-score" id="quiz-final-score"></div>
-            <p id="quiz-final-copy"></p>
-            <button class="button button-quiet" id="quiz-restart" type="button">Try again</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="sources" id="sources" aria-labelledby="sources-title">
-      <div class="wrap sources-grid">
-        <div>
-          <span class="eyebrow">The archive</span>
-          <h2 id="sources-title">Sources &amp; accuracy</h2>
-          <p class="sources-intro">The missions are real. The wonder is yours to carry. Read more from NASA and the Jet Propulsion Laboratory.</p>
-        </div>
+    <main class="story-page" id="sources-page" hidden>
+      <article class="sources-page">
+        <span class="page-label">A little more space to explore</span>
+        <h1 tabindex="-1" id="sources-title">Leo’s space bookshelf</h1>
+        <p>These real missions and discoveries come from NASA and the Jet Propulsion Laboratory. Leo’s conversations with the machines are make-believe storytelling.</p>
         <ul class="source-list">
-          <li><a href="https://science.nasa.gov/mission/mer-opportunity/" target="_blank" rel="noopener noreferrer"><span>NASA · Opportunity mission</span><span aria-hidden="true">↗</span></a></li>
-          <li><a href="https://www.jpl.nasa.gov/missions/mars-exploration-rover-opportunity-mer/" target="_blank" rel="noopener noreferrer"><span>JPL · Mars Exploration Rover</span><span aria-hidden="true">↗</span></a></li>
-          <li><a href="https://science.nasa.gov/mission/insight/science-instruments/" target="_blank" rel="noopener noreferrer"><span>NASA · InSight science instruments</span><span aria-hidden="true">↗</span></a></li>
-          <li><a href="https://www.jpl.nasa.gov/missions/mars-pathfinder-sojourner-rover/" target="_blank" rel="noopener noreferrer"><span>JPL · Mars Pathfinder / Sojourner</span><span aria-hidden="true">↗</span></a></li>
-          <li><a href="https://science.nasa.gov/mission/voyager/voyager-1/" target="_blank" rel="noopener noreferrer"><span>NASA · Voyager 1</span><span aria-hidden="true">↗</span></a></li>
+          <li><a href="https://science.nasa.gov/mission/mer-opportunity/" target="_blank" rel="noopener noreferrer"><span>NASA · Opportunity mission</span><span class="source-arrow" aria-hidden="true">↗</span></a></li>
+          <li><a href="https://www.jpl.nasa.gov/missions/mars-exploration-rover-opportunity-mer/" target="_blank" rel="noopener noreferrer"><span>JPL · Mars Exploration Rover</span><span class="source-arrow" aria-hidden="true">↗</span></a></li>
+          <li><a href="https://science.nasa.gov/mission/insight/science-instruments/" target="_blank" rel="noopener noreferrer"><span>NASA · InSight science instruments</span><span class="source-arrow" aria-hidden="true">↗</span></a></li>
+          <li><a href="https://www.jpl.nasa.gov/missions/mars-pathfinder-sojourner-rover/" target="_blank" rel="noopener noreferrer"><span>JPL · Mars Pathfinder and Sojourner</span><span class="source-arrow" aria-hidden="true">↗</span></a></li>
+          <li><a href="https://science.nasa.gov/mission/voyager/voyager-1/" target="_blank" rel="noopener noreferrer"><span>NASA · Voyager 1</span><span class="source-arrow" aria-hidden="true">↗</span></a></li>
         </ul>
-        <p class="accuracy-note">Scientific facts are based on NASA and NASA Jet Propulsion Laboratory mission pages. Creative first-person narration is labeled as storytelling.</p>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="wrap footer-inner"><span>An interactive storybook for curious minds.</span><span>Made for the NASA Space Apps Challenge · The Machines That Remain</span></div>
-  </footer>
-
-  <dialog id="story-dialog" aria-labelledby="dialog-title">
-    <div class="dialog-inner">
-      <div class="dialog-top">
-        <div><span class="dialog-kicker" id="dialog-kicker"></span><h2 class="dialog-title" id="dialog-title"></h2><p class="dialog-type" id="dialog-type"></p></div>
-        <button class="dialog-close" id="dialog-close" type="button" aria-label="Close story">×</button>
-      </div>
-      <span class="dialog-status" id="dialog-status"></span>
-      <div class="story-facts">
-        <section class="story-fact"><h3>Mission purpose</h3><p id="story-purpose"></p></section>
-        <section class="story-fact"><h3>Hardware</h3><p id="story-hardware"></p></section>
-        <section class="story-fact"><h3>Key science</h3><p id="story-science"></p></section>
-        <section class="story-fact"><h3>Where / status</h3><p id="story-current"></p></section>
-        <blockquote class="creative-voice" id="story-voice"><span id="story-narration"></span><cite>Creative narration · not a historical quotation</cite></blockquote>
-      </div>
-    </div>
-  </dialog>
-
-  <dialog class="mission-complete" id="mission-complete" aria-labelledby="ending-title">
-    <div class="ending-card">
-      <span class="ending-icon" aria-hidden="true">✦</span>
-      <span class="eyebrow">All four stories discovered</span>
-      <h2 id="ending-title">Mission complete.</h2>
-      <p>You’ve met the machines that looked, listened, rolled, and reached beyond. Their missions have endings. Their discoveries are still part of our story.</p>
-      <blockquote>“The signal fades. The question stays.”</blockquote>
-      <div class="ending-actions">
-        <button class="button button-primary" id="ending-quiz" type="button">Take the knowledge check <span aria-hidden="true">→</span></button>
-        <button class="button button-quiet" id="ending-close" type="button">Return to the collection</button>
-      </dialog>
-    </div>
+        <p class="source-note">Scientific facts are based on NASA and NASA Jet Propulsion Laboratory mission pages. First-person machine dialogue is creative storytelling, not a real quotation.</p>
+      </article>
+      <nav class="controls" aria-label="Sources navigation">
+        <button class="button button-back" id="sources-back" type="button">← Back to story</button>
+        <span></span>
+        <button class="button button-next" id="sources-restart" type="button">Restart Story <span aria-hidden="true">↻</span></button>
+      </nav>
+    </main>
   </div>
-
+  <div class="sr-only" id="announcer" aria-live="polite" aria-atomic="true"></div>
   <script>
     (() => {
-      const explorers = {
-        opportunity: {
-          name: "Opportunity",
-          type: "Mars rover · Mars Exploration Rover mission",
-          status: "Mission complete — silent on Mars",
-          purpose: "Search for geological evidence that ancient Mars had environments affected by liquid water.",
-          hardware: "A solar-powered rover equipped with cameras and geological instruments, designed for a 90-sol primary mission.",
-          science: "Opportunity operated for almost 15 years and found evidence that ancient Mars had environments affected by liquid water. Its final communication was received on June 10, 2018, after a global Martian dust storm; NASA declared the mission complete in February 2019.",
-          current: "Opportunity remains on Mars. Its mission is complete; it is no longer communicating.",
-          voice: "I was built for ninety days. The dust came, the signal faded, but the rocks had already told us a story about water."
+      const chapters = [
+        {
+          title: "Leo and the Mysterious Message",
+          label: "Chapter 1 · A curious beginning",
+          scene: "message",
+          caption: "A message, from far away",
+          robot: "",
+          helmet: true,
+          story: "One quiet night, Leo’s radio crackled: “Can anyone hear us?” Four space machines were calling from far away. Leo packed a snack and set off to find them.",
+          name: "the four explorers",
+          purpose: "explore, observe, and listen on worlds near and far",
+          achievement: "They helped us learn about Mars and became the first human-made explorer to enter interstellar space.",
+          voice: "Hello, Leo! Follow our signals, and we’ll show you what we found.",
+          fact: "The four explorers worked in very different places—from the ground on Mars to interstellar space."
         },
-        insight: {
-          name: "InSight",
-          type: "Mars lander · Interior exploration",
-          status: "Mission complete — listening legacy",
-          purpose: "Study Mars’ deep interior and reveal how rocky planets form and change.",
-          hardware: "A stationary lander that deployed the SEIS seismometer to measure marsquakes, meteorite impacts, and vibrations.",
-          science: "Seismic measurements helped scientists learn about the structure of Mars’ crust, mantle, and core.",
-          current: "InSight remained at its landing site on Mars. Its mission is complete; its seismic measurements remain a scientific legacy.",
-          voice: "I did not need wheels to travel. I listened to the planet beneath me, and every tremor carried a clue."
+        {
+          title: "A Little Rover Named Sojourner",
+          label: "Chapter 2 · Hello, Mars!",
+          scene: "sojourner",
+          caption: "Mars · 1997",
+          robot: "robot-rover",
+          story: "Leo landed on rusty-red Mars and met Sojourner, a rover small enough to roll around its landing place. It explored rocks and soil, taking pictures as it went. Sojourner was the first wheeled vehicle used on another planet.",
+          name: "Sojourner · Mars rover",
+          purpose: "Explore nearby Martian rocks and soil and show that a small rover could drive on another planet.",
+          achievement: "The first wheeled vehicle used on another planet; planned for seven days, it operated for 83 days.",
+          voice: "I was little, but I rolled where no wheels had rolled before!",
+          fact: "Sojourner rode to Mars aboard the Pathfinder lander in 1997."
         },
-        sojourner: {
-          name: "Sojourner",
-          type: "Mars rover · Mars Pathfinder",
-          status: "Mission complete — pioneer rover",
-          purpose: "Explore the Martian surface, examine nearby rocks and soil, and demonstrate mobile robotic exploration.",
-          hardware: "A small wheeled rover delivered to Mars by the Mars Pathfinder lander in 1997.",
-          science: "Sojourner photographed the terrain and analyzed rocks, soil, and the atmosphere. The first wheeled vehicle used on another planet was planned for a seven-day mission and operated for 83 days.",
-          current: "Sojourner remains at its Mars Pathfinder landing site. Its mission is complete.",
-          voice: "I was small enough to fit inside my lander. Then I rolled onto another planet and made the first tracks."
+        {
+          title: "Opportunity Keeps Going",
+          label: "Chapter 3 · The long adventure",
+          scene: "opportunity",
+          caption: "Mars · Meridiani Planum",
+          robot: "robot-rover",
+          story: "Next, Leo found Opportunity exploring a wide, dusty plain. The rover looked at Martian rocks for signs of places shaped by liquid water long ago. It was designed for 90 Martian days, but it worked for almost 15 years!",
+          name: "Opportunity · Mars rover",
+          purpose: "Search for signs that ancient Mars had environments affected by liquid water.",
+          achievement: "Found evidence that ancient Mars had environments affected by liquid water.",
+          voice: "Ninety days was the plan. Then I kept rolling, and rolling, and rolling!",
+          fact: "After a global dust storm, NASA received Opportunity’s final communication on June 10, 2018. NASA declared the mission complete in February 2019."
         },
-        voyager: {
-          name: "Voyager 1",
-          type: "Deep-space probe · Voyager program",
-          status: "Still traveling — beyond the heliosphere",
-          purpose: "Explore the outer solar system and continue outward into interstellar space.",
-          hardware: "A deep-space probe launched in 1977, carrying scientific instruments and the Golden Record: a gold-plated copper disc with sounds, images, music, and greetings from Earth.",
-          science: "Voyager 1 became the first human-made object to enter interstellar space. It continues traveling through interstellar space; it is not on a planet.",
-          current: "Still traveling through interstellar space, beyond the heliosphere.",
-          voice: "I carry a greeting from a small blue world. The stars grow distant, but the message keeps going."
+        {
+          title: "InSight Listens to Mars",
+          label: "Chapter 4 · A planet’s heartbeat",
+          scene: "insight",
+          caption: "Mars · Listening closely",
+          robot: "robot-seismo",
+          story: "A gentle thump came from the ground: InSight was listening! Its special seismometer measured marsquakes and other shakes. Those tiny wiggles helped scientists learn about the inside of Mars.",
+          name: "InSight · Mars lander",
+          purpose: "Study the deep inside of Mars without moving from its landing place.",
+          achievement: "Its seismometer measured marsquakes, meteorite impacts, and vibrations, helping scientists learn about Mars’ outer layer, middle layer, and center.",
+          voice: "I stayed in one spot and listened to Mars whisper from deep below.",
+          fact: "A seismometer is a tool that measures shaking and vibrations."
+        },
+        {
+          title: "Voyager 1’s Starry Journey",
+          label: "Chapter 5 · Beyond the planets",
+          scene: "voyager",
+          caption: "Still traveling through interstellar space",
+          robot: "robot-voyager",
+          story: "Leo followed a faraway blinking light and found Voyager 1, still traveling through interstellar space. It carries the Golden Record, with sounds, pictures, music, and greetings from Earth. Voyager 1 became the first human-made object to enter interstellar space.",
+          name: "Voyager 1 · Deep-space probe",
+          purpose: "Explore the outer solar system and continue traveling outward into interstellar space.",
+          achievement: "The first human-made object to enter interstellar space.",
+          voice: "I carry a little hello from Earth as I travel between the stars.",
+          fact: "The Golden Record is a gold-plated copper disc carrying sounds, images, music, and greetings from Earth. Voyager is traveling through space beyond the Sun’s bubble."
+        },
+        {
+          title: "The Story That Stays",
+          label: "Chapter 6 · The end is a beginning",
+          scene: "ending",
+          caption: "Curiosity keeps growing",
+          robot: "",
+          story: "Leo waved goodbye as each explorer sent one last twinkle. Their missions had different endings, but their discoveries stayed with us. Leo smiled: every machine leaves knowledge behind—and every question can begin a new adventure.",
+          name: "the four explorers",
+          purpose: "explore, observe, or listen, then share what they learned with Earth",
+          achievement: "Together, these explorers helped us learn about Mars and showed that human-made machines can travel into interstellar space.",
+          voice: "Our journeys may be different, but every discovery belongs to everyone.",
+          fact: "When a mission shares what it learns, that knowledge can inspire the next explorer."
         }
-      };
-
-      const discovered = new Set();
-      const navCount = document.getElementById("nav-count");
-      const collectionCount = document.getElementById("collection-count");
-      const progressBar = document.getElementById("progress-bar");
-      const progressFill = document.getElementById("progress-fill");
-      const storyDialog = document.getElementById("story-dialog");
-      const completeScreen = document.getElementById("mission-complete");
-      let lastStoryButton = null;
-      let endingShown = false;
-
-      document.querySelectorAll("[data-story]").forEach((button) => {
-        button.addEventListener("click", () => {
-          const story = explorers[button.dataset.story];
-          if (!story) return;
-          lastStoryButton = button;
-          document.getElementById("dialog-kicker").textContent = `Field notes · ${story.name}`;
-          document.getElementById("dialog-title").textContent = story.name;
-          document.getElementById("dialog-type").textContent = story.type;
-          const status = document.getElementById("dialog-status");
-          status.textContent = story.status;
-          status.classList.toggle("traveling", button.dataset.story === "voyager");
-          document.getElementById("story-purpose").textContent = story.purpose;
-          document.getElementById("story-hardware").textContent = story.hardware;
-          document.getElementById("story-science").textContent = story.science;
-          document.getElementById("story-current").textContent = story.current;
-          document.getElementById("story-narration").textContent = `“${story.voice}”`;
-          if (!storyDialog.open) storyDialog.showModal();
-          if (!discovered.has(button.dataset.story)) {
-            discovered.add(button.dataset.story);
-            updateProgress();
-          }
-        });
-      });
-
-      function updateProgress() {
-        const count = discovered.size;
-        navCount.textContent = `${count} / 4`;
-        collectionCount.textContent = `${count} of 4`;
-        progressBar.setAttribute("aria-valuenow", String(count));
-        progressFill.style.width = `${count * 25}%`;
-        if (count === 4 && !endingShown) {
-          endingShown = true;
-          window.setTimeout(() => {
-            if (storyDialog.open) storyDialog.close();
-            completeScreen.showModal();
-            document.getElementById("ending-close").focus();
-          }, 300);
-        }
-      }
-
-      document.getElementById("dialog-close").addEventListener("click", () => storyDialog.close());
-      storyDialog.addEventListener("click", (event) => {
-        if (event.target === storyDialog) storyDialog.close();
-      });
-      storyDialog.addEventListener("close", () => {
-        if (lastStoryButton && !completeScreen.open) lastStoryButton.focus();
-      });
-
-      const instrumentDetails = {
-        camera: ["Camera · seeing the surface", "Cameras photographed terrain, rocks, and soil. Sojourner used its cameras to document the Martian landscape; Opportunity’s images helped scientists study geological features."],
-        seismometer: ["Seismometer · listening inside", "InSight’s SEIS instrument measured seismic activity on Mars, including marsquakes, meteorite impacts, and vibrations. Those measurements helped scientists investigate the planet’s interior."],
-        wheels: ["Wheels · exploring the ground", "A rover’s wheels let it travel across a planetary surface and approach different targets. Sojourner became the first wheeled vehicle used on another planet."],
-        antenna: ["Antenna · bringing data home", "Spacecraft antennas send and receive radio signals, allowing commands and science data to travel between a spacecraft and Earth across vast distances."]
-      };
-      document.querySelectorAll("[data-instrument]").forEach((button) => {
-        button.addEventListener("click", () => {
-          const [title, description] = instrumentDetails[button.dataset.instrument];
-          document.querySelectorAll("[data-instrument]").forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
-          const result = document.getElementById("evidence-result");
-          result.replaceChildren();
-          const heading = document.createElement("strong");
-          heading.textContent = title;
-          const text = document.createTextNode(description);
-          result.append(heading, text);
-        });
-      });
-
-      const questions = [
-        { prompt: "Which explorer studied marsquakes?", options: ["Opportunity", "InSight", "Sojourner"], answer: 1, explanation: "InSight’s SEIS seismometer measured marsquakes and other vibrations." },
-        { prompt: "Which explorer carried the Golden Record?", options: ["Voyager 1", "Sojourner", "InSight"], answer: 0, explanation: "Voyager 1 carries the Golden Record, a message from Earth." },
-        { prompt: "Which rover was designed for 90 sols but lasted almost 15 years?", options: ["Sojourner", "Opportunity", "Voyager 1"], answer: 1, explanation: "Opportunity was designed for 90 Martian days and operated for almost 15 years." }
       ];
-      let questionIndex = 0;
-      let score = 0;
-      let answered = false;
-      const questionView = document.getElementById("quiz-question-view");
-      const resultView = document.getElementById("quiz-result");
 
-      function renderQuestion() {
-        answered = false;
-        const question = questions[questionIndex];
-        document.getElementById("quiz-step").textContent = `Question ${questionIndex + 1} of ${questions.length}`;
-        document.getElementById("quiz-score").textContent = `Score: ${score}`;
-        document.getElementById("question-text").textContent = question.prompt;
-        document.getElementById("quiz-feedback").textContent = "";
-        document.getElementById("quiz-feedback").className = "quiz-feedback";
-        document.getElementById("quiz-next").hidden = true;
-        const answers = document.getElementById("answer-list");
-        answers.replaceChildren();
-        question.options.forEach((option, index) => {
-          const button = document.createElement("button");
-          button.type = "button";
-          button.className = "answer-button";
-          const key = document.createElement("span");
-          key.className = "answer-key";
-          key.setAttribute("aria-hidden", "true");
-          key.textContent = String.fromCharCode(65 + index);
-          button.append(key, document.createTextNode(option));
-          button.addEventListener("click", () => chooseAnswer(index));
-          answers.append(button);
-        });
+      const storyPage = document.getElementById("story-page");
+      const sourcesPage = document.getElementById("sources-page");
+      const title = document.getElementById("chapter-title");
+      const scene = document.getElementById("scene");
+      const leo = document.getElementById("leo");
+      const robot = document.getElementById("robot");
+      const chapterCount = document.getElementById("chapter-count");
+      const spine = document.getElementById("book-spine");
+      const fill = document.getElementById("spine-fill");
+      const back = document.getElementById("back-button");
+      const next = document.getElementById("next-button");
+      const sourcesButton = document.getElementById("sources-button");
+      const announcer = document.getElementById("announcer");
+      let current = 0;
+      let showingSources = false;
+
+      function renderChapter(focusHeading = false) {
+        const chapter = chapters[current];
+        document.getElementById("page-label").textContent = chapter.label;
+        title.textContent = chapter.title;
+        document.getElementById("chapter-story").textContent = chapter.story;
+        scene.dataset.scene = chapter.scene;
+        scene.setAttribute("aria-label", chapter.caption);
+        document.getElementById("scene-caption").textContent = chapter.caption;
+        robot.className = `robot ${chapter.robot || ""}`;
+        leo.style.display = current === 0 || current === chapters.length - 1 ? "" : "none";
+        scene.classList.toggle("leo-helmet", Boolean(chapter.helmet));
+        if (chapter.helmet) {
+          const helmet = document.createElement("span");
+          helmet.className = "space-helmet";
+          helmet.setAttribute("aria-hidden", "true");
+          leo.append(helmet);
+        } else {
+          leo.querySelector(".space-helmet")?.remove();
+        }
+
+        const notes = document.getElementById("machine-notes");
+        notes.replaceChildren();
+        const addNote = (className, label, content) => {
+          const note = document.createElement("div");
+          note.className = `note ${className}`;
+          const strong = document.createElement("strong");
+          strong.textContent = `${label} `;
+          note.append(strong, document.createTextNode(content));
+          notes.append(note);
+        };
+        addNote("", `Meet ${chapter.name}. Designed to`, `${chapter.purpose.charAt(0).toLowerCase()}${chapter.purpose.slice(1)}.`);
+        addNote("", "What it did:", chapter.achievement);
+        addNote("note-dialogue", "Creative storytelling ·", `“${chapter.voice}”`);
+        addNote("note-fact", "Did you know?", chapter.fact);
+
+        chapterCount.replaceChildren();
+        chapterCount.append(document.createTextNode("Chapter "));
+        const chapterNumber = document.createElement("strong");
+        chapterNumber.textContent = String(current + 1);
+        chapterCount.append(chapterNumber, document.createTextNode(` of ${chapters.length}`));
+        spine.setAttribute("aria-valuenow", String(current + 1));
+        fill.style.width = `${((current + 1) / chapters.length) * 100}%`;
+        back.disabled = current === 0;
+        next.replaceChildren(document.createTextNode(current === chapters.length - 1 ? "Restart Story " : "Next Chapter "));
+        const nextArrow = document.createElement("span");
+        nextArrow.setAttribute("aria-hidden", "true");
+        nextArrow.textContent = current === chapters.length - 1 ? "↻" : "→";
+        next.append(nextArrow);
+        next.classList.toggle("button-restart", current === chapters.length - 1);
+        next.classList.toggle("button-next", current !== chapters.length - 1);
+        announcer.textContent = `${chapter.label}. ${chapter.title}`;
+        if (focusHeading) title.focus();
       }
 
-      function chooseAnswer(selectedIndex) {
-        if (answered) return;
-        answered = true;
-        const question = questions[questionIndex];
-        const answerButtons = [...document.querySelectorAll(".answer-button")];
-        answerButtons.forEach((button, index) => {
-          button.disabled = true;
-          if (index === question.answer) button.classList.add("correct");
-          else if (index === selectedIndex) button.classList.add("incorrect");
-        });
-        const feedback = document.getElementById("quiz-feedback");
-        if (selectedIndex === question.answer) {
-          score += 1;
-          feedback.textContent = `That’s right. ${question.explanation}`;
-          feedback.classList.add("is-correct");
-        } else {
-          feedback.textContent = `Not quite. ${question.explanation}`;
-          feedback.classList.add("is-incorrect");
-        }
-        document.getElementById("quiz-score").textContent = `Score: ${score}`;
-        const next = document.getElementById("quiz-next");
-        next.textContent = questionIndex === questions.length - 1 ? "See your results →" : "Next question →";
-        next.hidden = false;
-        next.focus();
+      function showStory(focus = false) {
+        showingSources = false;
+        sourcesPage.hidden = true;
+        storyPage.hidden = false;
+        sourcesButton.setAttribute("aria-pressed", "false");
+        renderChapter(focus);
       }
 
-      document.getElementById("quiz-next").addEventListener("click", () => {
-        if (questionIndex < questions.length - 1) {
-          questionIndex += 1;
-          renderQuestion();
-          document.getElementById("question-text").focus();
-        } else {
-          questionView.hidden = true;
-          resultView.hidden = false;
-          document.getElementById("quiz-final-score").textContent = `${score} / ${questions.length}`;
-          document.getElementById("quiz-final-copy").textContent = score === questions.length
-            ? "A perfect transmission. You know these explorers’ stories by heart."
-            : score === 0
-              ? "Every explorer is a new beginning. Revisit the stories and try again."
-              : "Every answer is another clue. Revisit the stories whenever curiosity calls.";
-          document.getElementById("quiz-restart").focus();
-        }
-      });
-      document.getElementById("quiz-restart").addEventListener("click", () => {
-        questionIndex = 0;
-        score = 0;
-        resultView.hidden = true;
-        questionView.hidden = false;
-        renderQuestion();
-        document.getElementById("question-text").focus();
-      });
-      document.getElementById("ending-close").addEventListener("click", () => {
-        completeScreen.close();
-      });
-      document.getElementById("ending-quiz").addEventListener("click", () => {
-        completeScreen.close();
-        document.getElementById("quiz").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-        window.setTimeout(() => document.getElementById("question-text").focus(), 350);
-      });
-      completeScreen.addEventListener("close", () => {
-        document.querySelector("[data-story]").focus();
-      });
+      function showSources() {
+        showingSources = true;
+        storyPage.hidden = true;
+        sourcesPage.hidden = false;
+        sourcesButton.setAttribute("aria-pressed", "true");
+        document.getElementById("sources-title").focus();
+        announcer.textContent = "Sources. Leo’s space bookshelf.";
+      }
 
-      renderQuestion();
+      next.addEventListener("click", () => {
+        if (current === chapters.length - 1) {
+          current = 0;
+          renderChapter(true);
+          return;
+        }
+        current += 1;
+        renderChapter(true);
+      });
+      back.addEventListener("click", () => {
+        if (current === 0) return;
+        current -= 1;
+        renderChapter(true);
+      });
+      sourcesButton.addEventListener("click", () => showingSources ? showStory(true) : showSources());
+      document.getElementById("sources-back").addEventListener("click", () => showStory(true));
+      document.getElementById("sources-restart").addEventListener("click", () => {
+        current = 0;
+        showStory(true);
+      });
+      document.getElementById("home-link").addEventListener("click", (event) => {
+        event.preventDefault();
+        current = 0;
+        showStory(true);
+      });
+      renderChapter();
     })();
   </script>
 </body>
